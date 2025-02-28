@@ -30,53 +30,39 @@ Automated Deployment: GitHub Actions rebuilds and deploys on content changes.
 - 🌐 GitHub REST API
 
 **Deployment**:
-
 - 🚀 GitHub Pages
-
 - ⚙️ GitHub Actions
 
 # 🗺️ Roadmap
-- [] Paginated post listings with search
-
-- [] Tag-based categorization
-
-- [] Secure authentication via GitHub OAuth
-
-- [] Mermaid.js integration (for diagrams)
-
-- [] Post User comments (via GitHub Issues API)
-
-- [] Dark/Light theme toggle
-
-- [] SEO optimization
-
-- [] Theme and Appearance Customizability
+- [ ] Paginated post listings with search
+- [ ] Tag-based categorization
+- [ ] Secure authentication via GitHub OAuth
+- [ ] Mermaid.js integration (for diagrams)
+- [ ] Post User comments (via GitHub Issues API)
+- [ ] Dark/Light theme toggle
+- [ ] SEO optimization
+- [ ] Theme and Appearance Customizability
 
 # 🤝 **Contributing**
 This project is at a very early planning stage, and your contributions are highly welcome! Here’s how you can help:
 
 - 💬 Discuss: Share your thoughts on optimizations or ideas for doing things, potential security vulnerabilities, or better ways to implement things.
-
 - 🐛 Report Issues: Found a bug? Let us know!
-
 - ✨ Submit PRs: Contribute code or documentation.
-
 - 🚀 Add Features: Help us expand the roadmap with new ideas.
 
 # 🚀 **Getting Started**
 Prerequisites:
 
 - 🛠️ .NET 9.0
-
 - 🔑 GitHub PAT with repo scope.
 
 **Setup:**
-
-bash
-Copy
+```bash
 git clone https://github.com/SaintScraTchY/StaticBlaze.git
 cd StaticBlaze
 dotnet run
+```
 Configuration:
 
 Update appsettings.json with your GitHub details.
