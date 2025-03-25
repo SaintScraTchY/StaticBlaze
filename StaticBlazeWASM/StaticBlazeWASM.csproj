@@ -1,0 +1,24 @@
+<Project Sdk="Microsoft.NET.Sdk.BlazorWebAssembly">
+    <Import Project="TailwindIntegration.targets"/>
+
+    <PropertyGroup>
+        <TargetFramework>net9.0</TargetFramework>
+        <Nullable>enable</Nullable>
+        <ImplicitUsings>enable</ImplicitUsings>
+        <TailwindCssInput>wwwroot\css\app.css</TailwindCssInput>
+        <TailwindCssOutput>wwwroot\css\app.out.css</TailwindCssOutput>
+    </PropertyGroup>
+
+    <ItemGroup>
+        <PackageReference Include="HeroIcons.Blazor" Version="1.0.6" />
+        <PackageReference Include="Markdig" Version="0.40.0" />
+        <PackageReference Include="Microsoft.AspNetCore.Components.WebAssembly" Version="9.0.0-*"/>
+        <PackageReference Include="Microsoft.AspNetCore.Components.WebAssembly.DevServer" Version="9.0.0-*" PrivateAssets="all"/>
+        <PackageReference Include="Radix" Version="4.9.3.1" />
+    </ItemGroup>
+
+    <ItemGroup>
+      <Folder Include="Components\Components\" />
+      <Folder Include="Services\" />
+    </ItemGroup>
+</Project>
