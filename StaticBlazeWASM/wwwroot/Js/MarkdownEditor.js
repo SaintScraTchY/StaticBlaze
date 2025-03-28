@@ -14,6 +14,14 @@ export function initEditor(element, dotNetRef, initialValue) {
             change: () => {
                 const markdown = editor.getMarkdown();
                 dotNetRef.invokeMethodAsync('UpdateEditorValue', markdown);
+            },
+            addImageBlobHook: async (blob, callback) => {
+                const compressedBlob = await compressImage(blob, 0.7); // 70% Quality
+                const reader = new FileReader();
+                reader.onload = () => {
+                    callback(reader.result, compressedBlob.name || "image");
+                };
+                reader.readAsDataURL(compressedBlob);
             }
         }
     });
@@ -34,4 +42,29 @@ export function initEditor(element, dotNetRef, initialValue) {
         },
         setMarkdown: (content) => editor.setMarkdown(content)
     };
+}
+
+async function compressImage(blob, quality = 0.7) {
+    return new Promise((resolve) => {
+        const img = new Image();
+        const reader = new FileReader();
+
+        reader.readAsDataURL(blob);
+        reader.onload = (event) => {
+            img.src = event.target.result;
+        };
+
+        img.onload = () => {
+            const canvas = document.createElement("canvas");
+            const ctx = canvas.getContext("2d");
+
+            canvas.width = img.width;
+            canvas.height = img.height;
+            ctx.drawImage(img, 0, 0);
+
+            canvas.toBlob((compressedBlob) => {
+                resolve(compressedBlob);
+            }, "image/jpeg", quality);
+        };
+    });
 }
