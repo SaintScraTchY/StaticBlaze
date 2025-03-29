@@ -20,6 +20,5 @@
 
     <ItemGroup>
       <Folder Include="Components\Components\" />
-      <Folder Include="Services\" />
     </ItemGroup>
 </Project>

@@ -9,13 +9,22 @@ using SixLabors.ImageSharp;
 using SixLabors.ImageSharp.Formats.Jpeg;
 using StaticBlazeWASM.Constants;
 using StaticBlazeWASM.Models;
+using StaticBlazeWASM.Services;
 
 namespace StaticBlazeWASM.Components.Pages;
 
 public partial class CreatePost : ComponentBase
 {
+    private readonly GithubService _githubService;
+    
     private int uploadProgress = 0;
     private string uploadStatusMessage = "Starting upload...";
+
+    public CreatePost(GithubService githubService)
+    {
+        Console.WriteLine($"HostEnvBase : {GithubConfig.Branch}");
+        _githubService = githubService;
+    }
 
     private Post Post { get; set; } = new Post();
     private string ThumbnailPreviewUrl { get; set; }
@@ -41,7 +50,7 @@ public partial class CreatePost : ComponentBase
             var fileName = $"{hash}.jpg"; // Use computed hash for uniqueness
 
             // Upload image to GitHub and get the URL
-            var githubUrl = await UploadImageToGitHub(imageBytes, fileName);
+            var githubUrl = await _githubService.UploadImageToGitHub(imageBytes, fileName);
 
             if (!string.IsNullOrEmpty(githubUrl))
             {
@@ -50,7 +59,7 @@ public partial class CreatePost : ComponentBase
         }
 
         var markdown = GenerateMarkdownWithMetadata();
-        await Http.PostAsJsonAsync("api/posts", new { Content = markdown });
+        await _githubService.ProcessMarkDown(markdown, $"Create post {Post.Slug}", Post.Slug);
         Navigation.NavigateTo($"/post/{Post.Slug}");
     }
 
@@ -106,44 +115,6 @@ public partial class CreatePost : ComponentBase
     
     private static string GenerateGitHubImageUrl(string fileName)
         => $"https://raw.githubusercontent.com/{GithubConfig.Owner}/{GithubConfig.Repo}/{GithubConfig.Branch}/images/{fileName}";
-
-    
-    private async Task<string> UploadImageToGitHub(byte[] imageBytes, string fileName)
-    {
-        var path = $"images/{fileName}"; // Path inside the repository
-        var githubApiUrl = $"https://api.github.com/repos/{GithubConfig.Owner}/{GithubConfig.Repo}/contents/{path}";
-
-        var content = new
-        {
-            message = $"Upload image {fileName}",
-            content = Convert.ToBase64String(imageBytes),
-            branch = GithubConfig.Branch
-        };
-
-        var request = new HttpRequestMessage(HttpMethod.Put, githubApiUrl)
-        {
-            Content = JsonContent.Create(content)
-        };
-        request.Headers.UserAgent.ParseAdd("StaticBlazeWASM");
-        request.Headers.Authorization = new AuthenticationHeaderValue("token", "your-github-token");
-
-        var response = await Http.SendAsync(request);
-        if (!response.IsSuccessStatusCode) return string.Empty;
-        
-        var responseData = await response.Content.ReadFromJsonAsync<GitHubUploadResponse>();
-        return responseData?.Content?.DownloadUrl ?? string.Empty;
-    }
-
-    private record GitHubUploadResponse
-    {
-        public GitHubContent Content { get; set; }
-    }
-
-    private record GitHubContent
-    {
-        [JsonPropertyName("download_url")]
-        public string DownloadUrl { get; set; }
-    }
 
     [GeneratedRegex(StaticBlazeConfig.ImagePattern)]
     private static partial Regex ImageExtracterRegex();
