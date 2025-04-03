@@ -10,7 +10,8 @@ public static class BlazorBuilder
         var owner = builder.Configuration["GithubConfig:Owner"];
         var repo = builder.Configuration["GithubConfig:Repo"];
         var branch = builder.Configuration["GithubConfig:Branch"];
-        GithubConfig.SetConfig(owner, repo, branch);
+        var username = builder.Configuration["GithubConfig:Username"];
+        GithubConfig.SetConfig(owner, repo, branch,username);
         return builder;
     }
     

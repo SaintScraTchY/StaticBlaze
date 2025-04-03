@@ -1,0 +1,37 @@
+﻿@page "/Dashboard"
+<div class="h-full bg-gray-100 dark:bg-gray-900 p-6 rounded-xl">
+    <div class="h-3/4 container mx-auto" rounded-lg>
+        <nav class="rounded-lg w-full bg-white dark:bg-gray-800 p-4 shadow flex justify-between items-center">
+            <div class="rounded-lg text-xl font-semibold text-gray-900 dark:text-gray-100">Admin Dashboard</div>
+            <div>
+                <button class="px-4 py-2 bg-gray-700 text-white rounded-md hover:bg-gray-600">Toggle Dark Mode</button>
+            </div>
+        </nav>
+
+        <h1 class="text-2xl font-semibold text-gray-900 dark:text-gray-100 my-4">Admin Dashboard</h1>
+
+        <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
+            <!-- Posts Section -->
+            <div class="bg-white dark:bg-gray-800 p-4 rounded-lg shadow">
+                <h2 class="text-lg font-medium text-gray-900 dark:text-gray-100">Manage Posts</h2>
+                <button class="mt-2 px-4 py-2 bg-blue-500 text-white rounded-md hover:bg-blue-600">Add New Post</button>
+            </div>
+
+            <!-- Tags Section -->
+            <div class="bg-white dark:bg-gray-800 p-4 rounded-lg shadow">
+                <h2 class="text-lg font-medium text-gray-900 dark:text-gray-100">Manage Tags</h2>
+                <button class="mt-2 px-4 py-2 bg-green-500 text-white rounded-md hover:bg-green-600">Add New Tag</button>
+            </div>
+
+            <!-- Images Section -->
+            <div class="bg-white dark:bg-gray-800 p-4 rounded-lg shadow">
+                <h2 class="text-lg font-medium text-gray-900 dark:text-gray-100">Manage Images</h2>
+                <button class="mt-2 px-4 py-2 bg-yellow-500 text-white rounded-md hover:bg-yellow-600">Upload New Image</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+@code {
+    
+}
