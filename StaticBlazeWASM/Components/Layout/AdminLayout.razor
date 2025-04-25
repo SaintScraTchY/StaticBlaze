@@ -1,0 +1,62 @@
+﻿@inherits LayoutComponentBase
+
+<div class="@(_isDarkMode ? "dark" : null) flex h-screen bg-gray-100">
+    <!-- Sidebar -->
+    <aside class="@($"{(isSidebarOpen ? "w-64" : "w-16")} transition-all duration-300 bg-gray-800")  h-screen fixed left-0 top-0 z-40 transition-all duration-300 transform bg-gray-800 text-white p-4 flex flex-col space-y-4" style="overflow-y: auto;">
+        <div class="flex items-center justify-between mb-6">
+            <span class="text-lg font-bold hidden md:block">Admin</span>
+            <button @onclick="ToggleSidebar" class="text-white focus:outline-none md:hidden">
+                <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16M4 18h16"></path>
+                </svg>
+            </button>
+        </div>
+
+        <nav class="space-y-4">
+            <a href="/admin/dashboard" class="flex items-center p-2 hover:bg-gray-700 rounded transition-colors">
+                <svg class="w-5 h-5 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 10h4V3H3v7zm0 4h4v7H3v-7zm7-4h4V3h-4v7zm0 4h4v7h-4v-7zm7-4h4V3h-4v7zm0 4h4v7h-4v-7z"></path>
+                </svg>
+                <span class="hidden md:block">Dashboard</span>
+            </a>
+            <a href="/admin/create-post" class="flex items-center p-2 hover:bg-gray-700 rounded transition-colors">
+                <svg class="w-5 h-5 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4v16m8-8H4"></path>
+                </svg>
+                <span class="hidden md:block">Create Post</span>
+            </a>
+            <a href="/admin/tags" class="flex items-center p-2 hover:bg-gray-700 rounded transition-colors">
+                <svg class="w-5 h-5 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M7 7h.01M7 3a1 1 0 00-1 1v16a1 1 0 001 1h10a1 1 0 001-1V4a1 1 0 00-1-1H7z"></path>
+                </svg>
+                <span class="hidden md:block">Tags</span>
+            </a>
+            <a href="/admin/images" class="flex items-center p-2 hover:bg-gray-700 rounded transition-colors">
+                <svg class="w-5 h-5 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 16l4-4a3 3 0 014 0l4 4m0 0V4m0 12h4"></path>
+                </svg>
+                <span class="hidden md:block">Images</span>
+            </a>
+        </nav>
+
+        <div class="mt-auto pt-6 border-t border-gray-700">
+            <button @onclick="ToggleDarkMode" class="flex items-center w-full p-2 hover:bg-gray-700 rounded transition-colors">
+                <svg class="w-5 h-5 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 3v1m0 16v1m8.485-8.485h-1M4.515 12.515h-1M16.95 7.05l-.707.707M7.757 16.243l-.707.707M16.95 16.95l-.707-.707M7.757 7.757l-.707-.707"></path>
+                </svg>
+                <span class="hidden md:block">Toggle Theme</span>
+            </button>
+            <button @onclick="Logout" class="flex items-center w-full p-2 text-red-400 hover:bg-gray-700 hover:text-red-600 rounded transition-colors">
+                <svg class="w-5 h-5 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 16l4-4m0 0l-4-4m4 4H7m6 4v1m0-10V4"></path>
+                </svg>
+                <span class="hidden md:block">Logout</span>
+            </button>
+        </div>
+    </aside>
+
+    <!-- Main Content -->
+    <main class="flex-1 ml-64 transition-all duration-300 p-6">
+        @Body
+    </main>
+</div>

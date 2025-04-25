@@ -1,8 +1,6 @@
-﻿using System.Net.Http.Headers;
-using System.Net.Http.Json;
-using System.Security.Cryptography;
-using System.Text.Json.Serialization;
+﻿using System.Security.Cryptography;
 using System.Text.RegularExpressions;
+using Blazored.LocalStorage;
 using Microsoft.AspNetCore.Components;
 using Microsoft.AspNetCore.Components.Forms;
 using SixLabors.ImageSharp;
@@ -11,7 +9,7 @@ using StaticBlazeWASM.Constants;
 using StaticBlazeWASM.Models;
 using StaticBlazeWASM.Services;
 
-namespace StaticBlazeWASM.Components.Pages;
+namespace StaticBlazeWASM.Components.Pages.Admin;
 
 public partial class CreatePost : ComponentBase
 {
@@ -25,7 +23,7 @@ public partial class CreatePost : ComponentBase
         Console.WriteLine($"HostEnvBase : {GithubConfig.Branch}");
         _githubService = githubService;
     }
-
+    
     private Post Post { get; set; } = new Post();
     private string ThumbnailPreviewUrl { get; set; }
     private List<string> ImageUrls { get; set; } = new();
@@ -102,7 +100,7 @@ public partial class CreatePost : ComponentBase
     {
         return $"""
         ---
-        thumbnail: {Post.ThumbnailBase64}
+        thumbnail: {ThumbnailPreviewUrl}
         slug: {Post.Slug}
         title: {Post.Title}
         author: {Post.Author}

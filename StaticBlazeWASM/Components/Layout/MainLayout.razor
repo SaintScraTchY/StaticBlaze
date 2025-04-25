@@ -1,7 +1,7 @@
 ﻿@inherits LayoutComponentBase
 
 <div class="page">
-    <main class="flex-1 bg-gray-100 dark:bg-gray-950">
+    <main class="@(_isDarkMode ? "dark" : "light") flex-1 bg-gray-100 dark:bg-gray-950">
         <nav>
             <NavMenu/>
         </nav>
