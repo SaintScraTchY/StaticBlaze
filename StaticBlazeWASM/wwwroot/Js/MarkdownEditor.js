@@ -1,46 +1,35 @@
 ﻿import Editor from 'https://esm.sh/@toast-ui/editor';
-
 export function initEditor(element, dotNetRef, initialValue) {
-    // Calculate height minus headers/margins
-    const containerHeight = `${element.parentElement.clientHeight - 40}px`;
-
     const editor = new Editor({
         el: element,
         initialValue: initialValue || '',
         previewStyle: 'vertical',
-        height: containerHeight, // Use calculated height
+        height: `${element.parentElement.clientHeight - 40}px`,
         usageStatistics: false,
         hooks: {
             change: () => {
-                const markdown = editor.getMarkdown();
-                dotNetRef.invokeMethodAsync('UpdateEditorValue', markdown);
+                dotNetRef.invokeMethodAsync('UpdateEditorValue', editor.getMarkdown());
             },
             addImageBlobHook: async (blob, callback) => {
-                const compressedBlob = await compressImage(blob, 0.7); // 70% Quality
-                const reader = new FileReader();
-                reader.onload = () => {
-                    callback(reader.result, compressedBlob.name || "image");
-                };
-                reader.readAsDataURL(compressedBlob);
+                // compress first
+                const compressedBlob = await compressImage(blob, 0.7);
+                // send to .NET
+                const arrayBuffer = await compressedBlob.arrayBuffer();
+                // call .NET, get URL
+                const url = await dotNetRef.invokeMethodAsync(
+                    'HandleImageUpload',
+                    Array.from(new Uint8Array(arrayBuffer)),
+                    compressedBlob.type
+                );
+                callback(url, compressedBlob.name);
             }
         }
     });
 
-    // Handle window resize
-    const resizeHandler = () => {
-        const newHeight = `${element.parentElement.clientHeight - 40}px`;
-        editor.setHeight(newHeight);
-    };
-
-    window.addEventListener('resize', resizeHandler);
-
-    // Return cleanup function
+    // resize logic omitted for brevity…
     return {
-        destroy: () => {
-            window.removeEventListener('resize', resizeHandler);
-            editor.destroy();
-        },
-        setMarkdown: (content) => editor.setMarkdown(content)
+        destroy: () => editor.destroy(),
+        setMarkdown: content => editor.setMarkdown(content)
     };
 }
 

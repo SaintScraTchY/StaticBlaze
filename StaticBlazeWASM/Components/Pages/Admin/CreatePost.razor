@@ -83,7 +83,7 @@
         <!-- Markdown Editor -->
         <div class="space-y-2">
             <label class="block text-sm font-medium text-gray-700">Content</label>
-            <MarkdownEditor @bind-Value="Post.Content" />
+            <MarkdownEditor Content="@Post.Content" ContentChanged="@((v) => Post.Content = v)" />
         </div>
 
         <!-- Image List (for replacement) -->

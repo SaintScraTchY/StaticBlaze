@@ -1,8 +1,9 @@
 ﻿using System.Security.Cryptography;
 using System.Text.RegularExpressions;
-using Blazored.LocalStorage;
+using HeyRed.Mime;
 using Microsoft.AspNetCore.Components;
 using Microsoft.AspNetCore.Components.Forms;
+using Microsoft.JSInterop;
 using SixLabors.ImageSharp;
 using SixLabors.ImageSharp.Formats.Jpeg;
 using StaticBlazeWASM.Constants;
@@ -59,6 +60,21 @@ public partial class CreatePost : ComponentBase
         var markdown = GenerateMarkdownWithMetadata();
         await _githubService.ProcessMarkDown(markdown, $"Create post {Post.Slug}", Post.Slug);
         Navigation.NavigateTo($"/post/{Post.Slug}");
+    }
+    
+    [JSInvokable]
+    public async Task<string> HandleImageUpload(int[] imageBytes, string contentType)
+    {
+        // Convert the byte array to a byte[]
+        var byteArray = imageBytes.Select(b => (byte)b).ToArray();
+        var hash = ComputeImageHash(byteArray);
+
+        // Get file extension from MIME type
+        var extension = MimeTypesMap.GetExtension(contentType) ?? "bin";
+        var fileName = $"{hash}.{extension}";
+
+        // Upload to GitHub
+        return await _githubService.UploadImageToGitHub(byteArray, fileName);
     }
 
     private static async Task<byte[]> CompressImageAsync(Stream imageStream, double quality)

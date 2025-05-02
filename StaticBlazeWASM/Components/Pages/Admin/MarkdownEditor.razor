@@ -1,7 +1,7 @@
 ﻿@inject IJSRuntime JsRuntime
 @implements IAsyncDisposable
 
-<div class="relative h-[calc(100vh-4rem)]"> @* Adjust 4rem based on your header height *@
+<div class="relative h-[calc(100vh-4rem)]">
     @if (!_isInitialized)
     {
         <div class="absolute inset-0 flex items-center justify-center bg-white bg-opacity-75 z-10">
@@ -9,76 +9,8 @@
         </div>
     }
 
-    @* <div class="@(_isInitialized ? "hidden" : "absolute") inset-0 flex items-center justify-center bg-white bg-opacity-75 z-10 transition-opacity duration-300"> *@
-    @*     <div class="animate-spin rounded-full h-12 w-12 border-t-2 border-b-2 border-blue-500"></div> *@
-    @*     <span class="ml-2 text-gray-600">Loading editor...</span> *@
-    @* </div> *@
-
     <div class="h-full flex flex-col">
         <h2 class="text-lg font-semibold mb-2 text-gray-700">Editor</h2>
-        <div @ref="EditorElement" class="flex-1 min-h-0 border border-gray-300 rounded-lg overflow-hidden">
-            @* Editor will be injected here *@
-        </div>
+        <div @ref="EditorElement" class="flex-1 min-h-0 border border-gray-300 rounded-lg overflow-hidden"></div>
     </div>
 </div>
-
-@code {
-    private ElementReference EditorElement;
-    private IJSObjectReference EditorInstance;
-    private IJSObjectReference Module;
-    private bool _isInitialized;
-
-    [Parameter]
-    public string Value { get; set; } = string.Empty;
-
-    [Parameter]
-    public EventCallback<string> ValueChanged { get; set; }
-
-    protected override async Task OnAfterRenderAsync(bool firstRender)
-    {
-        if (firstRender)
-        {
-            try
-            {
-                Module = await JsRuntime.InvokeAsync<IJSObjectReference>(
-                    "import", 
-                    "./Js/MarkdownEditor.js"
-                );
-
-                EditorInstance = await Module.InvokeAsync<IJSObjectReference>(
-                    "initEditor",
-                    EditorElement,
-                    DotNetObjectReference.Create(this),
-                    Value ?? string.Empty
-                );
-                
-                _isInitialized = true;
-                StateHasChanged(); // Trigger re-render to hide loader
-            }
-            catch (Exception ex)
-            {
-                Console.Error.WriteLine($"Editor initialization failed: {ex.Message}");
-            }
-        }
-    }
-
-    [JSInvokable]
-    public async Task UpdateEditorValue(string value)
-    {
-        Value = value;
-        await ValueChanged.InvokeAsync(value);
-    }
-
-    public async ValueTask DisposeAsync()
-    {
-        if (EditorInstance != null)
-        {
-            await EditorInstance.InvokeVoidAsync("destroy");
-            await EditorInstance.DisposeAsync();
-        }
-        if (Module != null)
-        {
-            await Module.DisposeAsync();
-        }
-    }
-}
