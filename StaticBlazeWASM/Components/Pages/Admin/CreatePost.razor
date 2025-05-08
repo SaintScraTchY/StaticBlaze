@@ -13,7 +13,7 @@
     </div>
 
 
-    <EditForm Model="@Post" OnValidSubmit="HandleSubmit" class="space-y-6">
+    <EditForm Model="@BlogPost" OnValidSubmit="HandleSubmit" class="space-y-6">
         <DataAnnotationsValidator />
 
         <!-- Thumbnail Upload -->
@@ -22,28 +22,13 @@
             <div class="flex items-center space-x-4">
                 <label class="flex flex-col items-center justify-center w-40 h-40 border-2 border-dashed border-gray-300 rounded-lg cursor-pointer hover:border-blue-500 transition-colors">
                     <InputFile OnChange="HandleThumbnailUpload" accept="image/*" class="hidden" />
-                    @if (ThumbnailPreviewUrl == null)
-                    {
-                        <div class="flex flex-col items-center p-4 text-gray-500">
-                            <svg class="w-8 h-8 mb-2" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
-                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 16l4.586-4.586a2 2 0 012.828 0L16 16m-2-2l1.586-1.586a2 2 0 012.828 0L20 14m-6-6h.01M6 20h12a2 2 0 002-2V6a2 2 0 00-2-2H6a2 2 0 00-2 2v12a2 2 0 002 2z"></path>
-                            </svg>
-                            <span class="text-sm">Upload Thumbnail</span>
-                        </div>
-                    }
-                    else
-                    {
-                        <img src="@ThumbnailPreviewUrl" alt="Thumbnail Preview" class="w-full h-full object-cover rounded-lg" />
-                    }
+                    <img src="@ThumbnailPreviewUrl" alt="Thumbnail Preview" class="w-full h-full object-cover rounded-lg" />
                 </label>
-                @if (ThumbnailPreviewUrl != null)
-                {
-                    <button type="button" @onclick="() => ThumbnailPreviewUrl = null" class="text-red-500 hover:text-red-700">
-                        <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
-                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16"></path>
-                        </svg>
-                    </button>
-                }
+                <button type="button" @onclick="() => ThumbnailPreviewUrl = null" class="text-red-500 hover:text-red-700">
+                    <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16"></path>
+                    </svg>
+                </button>
             </div>
         </div>
 
@@ -52,60 +37,60 @@
             <!-- Slug -->
             <div class="space-y-2">
                 <label class="block text-sm font-medium text-gray-700">Slug (URL-friendly)</label>
-                <InputText @bind-Value="Post.Slug" class="w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-blue-500 focus:border-blue-500" />
-                <ValidationMessage For="@(() => Post.Slug)" class="text-sm text-red-600" />
+                <InputText @bind-Value="BlogPost.Slug" class="w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-blue-500 focus:border-blue-500" />
+                <ValidationMessage For="@(() => BlogPost.Slug)" class="text-sm text-red-600" />
             </div>
 
             <!-- Title -->
             <div class="space-y-2">
                 <label class="block text-sm font-medium text-gray-700">Title</label>
-                <InputText @bind-Value="Post.Title" class="w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-blue-500 focus:border-blue-500" />
+                <InputText @bind-Value="BlogPost.Title" class="w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-blue-500 focus:border-blue-500" />
             </div>
 
             <!-- Short Description -->
             <div class="space-y-2 md:col-span-2">
                 <label class="block text-sm font-medium text-gray-700">Short Description (max 256 chars)</label>
-                <InputTextArea @bind-Value="Post.ShortDescription" maxlength="256" class="w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-blue-500 focus:border-blue-500" rows="3" />
+                <InputTextArea @bind-Value="BlogPost.ShortDescription" maxlength="256" class="w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-blue-500 focus:border-blue-500" rows="3" />
             </div>
 
             <!-- Author & Tags -->
             <div class="space-y-2">
                 <label class="block text-sm font-medium text-gray-700">Author</label>
-                <InputText @bind-Value="Post.Author" class="w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-blue-500 focus:border-blue-500" />
+                <InputText @bind-Value="BlogPost.Author" class="w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-blue-500 focus:border-blue-500" />
             </div>
 
             <div class="space-y-2">
                 <label class="block text-sm font-medium text-gray-700">Tags (comma-separated)</label>
-                <InputText @bind-Value="Post.Tags" class="w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-blue-500 focus:border-blue-500" placeholder="blazor, markdown, web" />
+                <InputText @bind-Value="BlogPost.Tags" class="w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-blue-500 focus:border-blue-500" placeholder="blazor, markdown, web" />
             </div>
         </div>
 
         <!-- Markdown Editor -->
         <div class="space-y-2">
             <label class="block text-sm font-medium text-gray-700">Content</label>
-            <MarkdownEditor Content="@Post.Content" ContentChanged="@((v) => Post.Content = v)" />
+            <MarkdownEditor Content="@BlogPost.Content" ContentChanged="@((v) => BlogPost.Content = v)" />
         </div>
 
         <!-- Image List (for replacement) -->
-        @if (ImageUrls.Any())
-        {
-            <div class="space-y-2">
-                <label class="block text-sm font-medium text-gray-700">Images in Post</label>
-                <div class="flex flex-wrap gap-2">
-                    @foreach (var img in ImageUrls)
-                    {
-                        <div class="relative group">
-                            <img src="@img" class="w-20 h-20 object-cover rounded border border-gray-200" />
-                            <button type="button" @onclick="() => ReplaceThisImage(img)" class="absolute inset-0 bg-black bg-opacity-50 flex items-center justify-center opacity-0 group-hover:opacity-100 transition-opacity rounded">
-                                <svg class="w-5 h-5 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
-                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 16l4.586-4.586a2 2 0 012.828 0L16 16m-2-2l1.586-1.586a2 2 0 012.828 0L20 14m-6-6h.01M6 20h12a2 2 0 002-2V6a2 2 0 00-2-2H6a2 2 0 00-2 2v12a2 2 0 002 2z"></path>
-                                </svg>
-                            </button>
-                        </div>
-                    }
-                </div>
-            </div>
-        }
+        @* @if (ImageUrls.Any()) *@
+        @* { *@
+        @*     <div class="space-y-2"> *@
+        @*         <label class="block text-sm font-medium text-gray-700">Images in Post</label> *@
+        @*         <div class="flex flex-wrap gap-2"> *@
+        @*             @foreach (var img in ImageUrls) *@
+        @*             { *@
+        @*                 <div class="relative group"> *@
+        @*                     <img src="@img" class="w-20 h-20 object-cover rounded border border-gray-200" /> *@
+        @*                     <button type="button" @onclick="() => ReplaceThisImage(img)" class="absolute inset-0 bg-black bg-opacity-50 flex items-center justify-center opacity-0 group-hover:opacity-100 transition-opacity rounded"> *@
+        @*                         <svg class="w-5 h-5 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"> *@
+        @*                             <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 16l4.586-4.586a2 2 0 012.828 0L16 16m-2-2l1.586-1.586a2 2 0 012.828 0L20 14m-6-6h.01M6 20h12a2 2 0 002-2V6a2 2 0 00-2-2H6a2 2 0 00-2 2v12a2 2 0 002 2z"></path> *@
+        @*                         </svg> *@
+        @*                     </button> *@
+        @*                 </div> *@
+        @*             } *@
+        @*         </div> *@
+        @*     </div> *@
+        @* } *@
 
         <!-- Submit Button -->
         <div class="flex justify-end">

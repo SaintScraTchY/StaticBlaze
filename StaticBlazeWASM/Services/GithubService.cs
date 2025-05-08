@@ -18,21 +18,22 @@ public class GithubService
         LocalStorage = localStorage;
     }
 
-    public async Task<bool> ProcessMarkDown(string content, string message,string fileName)
+    public async Task<bool> ProcessMarkDown(BlogPost metaPost, string message,string fileName)
     {
+        var content = metaPost.GenerateMarkdownWithMetadata();
         if (!await UploadMarkDown(content, message, fileName)) return false;
         
         var htmlContent = MarkdownHelper.ToHtml(content);
         return await UploadMarkdownHtmlPage(htmlContent, message, fileName);
 
     }
-    
+
     private async Task<bool> UploadMarkDown(string content, string message,string fileName)
     {
         var ghPAT = await LocalStorage.GetItemAsStringAsync("GitHubToken");
         if (string.IsNullOrEmpty(ghPAT)) return false;
         
-        var githubApiUrl = $"https://api.github.com/repos/{GithubConfig.Owner}/{GithubConfig.Repo}/contents/Posts/{fileName}.md";
+        var githubApiUrl = $"https://api.github.com/repos/{GithubConfig.Owner}/{GithubConfig.Repo}/contents/{StaticBlazeConfig.BlogDocs}/{fileName}.md";
 
         var request = new HttpRequestMessage(HttpMethod.Put, githubApiUrl)
         {
@@ -55,7 +56,7 @@ public class GithubService
         var ghPAT = await LocalStorage.GetItemAsStringAsync("GitHubToken");
         if (string.IsNullOrEmpty(ghPAT)) return false;
         
-        var githubApiUrl = $"https://api.github.com/repos/{GithubConfig.Owner}/{GithubConfig.Repo}/contents/Pages/{fileName}.html";
+        var githubApiUrl = $"https://api.github.com/repos/{GithubConfig.Owner}/{GithubConfig.Repo}/contents/{StaticBlazeConfig.BlogPosts}/{fileName}.html";
 
         var request = new HttpRequestMessage(HttpMethod.Put, githubApiUrl)
         {
@@ -78,7 +79,7 @@ public class GithubService
         var ghPAT = await LocalStorage.GetItemAsStringAsync("GitHubToken");
         if (string.IsNullOrEmpty(ghPAT)) return null;
         
-        var path = $"Images/{fileName}"; // Path inside the repository
+        var path = $"{StaticBlazeConfig.BlogAssets}/{fileName}"; // Path inside the repository
         var githubApiUrl = $"https://api.github.com/repos/{GithubConfig.Owner}/{GithubConfig.Repo}/contents/{path}";
 
         var content = new

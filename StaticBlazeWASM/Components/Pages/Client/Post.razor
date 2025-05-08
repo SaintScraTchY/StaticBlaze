@@ -1,0 +1,12 @@
+﻿@page "/posts/{Slug}"
+@using StaticBlazeWASM.Models
+@using StaticBlazeWASM.Services
+@inject BlogService BlogService
+
+
+<article class="prose lg:prose-xl dark:prose-invert mx-auto py-8">
+    <h1>@blogPost?.Title</h1>
+    <img src="@blogPost?.Thumbnail" class="w-full rounded-lg mb-4 shadow-lg" alt="@blogPost?.Title - thumbnail"/>
+    <div class="text-sm text-gray-400 mb-4">@blogPost?.Author</div>
+    <div>@((MarkupString)blogPost?.Content)</div>
+</article>

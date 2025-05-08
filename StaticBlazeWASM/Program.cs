@@ -12,6 +12,8 @@ builder.RootComponents.Add<App>("#app");
 builder.RootComponents.Add<HeadOutlet>("head::after");
 
 builder.Services.AddScoped<GithubService>();
+builder.Services.AddScoped<BlogService>();
+
 builder.Services.AddBlazoredLocalStorage();
 builder.SetGitConfig();
 

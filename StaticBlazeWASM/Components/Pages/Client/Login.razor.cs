@@ -6,7 +6,7 @@ using Microsoft.AspNetCore.Http;
 using StaticBlazeWASM.Constants;
 using StaticBlazeWASM.Models;
 
-namespace StaticBlazeWASM.Components.Pages.Admin;
+namespace StaticBlazeWASM.Components.Pages.Client;
 
 public partial class Login : ComponentBase
 {
