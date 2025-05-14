@@ -26,6 +26,7 @@ public class BlogService
 
     public async Task<BlogPost?> GetPostAsync(string slug)
     {
+        var docuri = $"{_navigationManager.BaseUri}/{StaticBlazeConfig.BlogDocs}/{slug}.md";
         var docResponse = _httpClient.GetAsync($"{_navigationManager.BaseUri}/{StaticBlazeConfig.BlogDocs}/{slug}.md");
         var postResponse = _httpClient.GetAsync($"{_navigationManager.BaseUri}/{StaticBlazeConfig.BlogPosts}/{slug}.html");
         await Task.WhenAll(docResponse, postResponse);

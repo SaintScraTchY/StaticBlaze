@@ -52,13 +52,13 @@ public partial class CreatePost : ComponentBase
 
     private async Task HandleSubmit()
     {
-        var imageUrls = ExtractImageUrls(BlogPost.Thumbnail);
+        var imageUrls = ExtractImageUrlsByString(BlogPost.Thumbnail);
         
         if(imageUrls == null || imageUrls.Count == 0)
         {
             return;
         }
-
+        
         var imageBytes = Convert.FromBase64String(imageUrls.FirstOrDefault());
         var hash = ComputeImageHash(imageBytes);
         var fileName = $"{hash}.jpg"; // Use computed hash for uniqueness
@@ -123,20 +123,27 @@ public partial class CreatePost : ComponentBase
         //Generate Image URL
         ReplaceImage(base64Image, GenerateGitHubImageUrl(hash + ".jpg"));
     }
-    private static List<string> ExtractImageUrls(string? markdown)
+    private static List<string> ExtractImageUrlsByMarkDown(string? markdown)
     {
-        var matches = ImageExtracterRegex().Matches(markdown);
+        var matches = MarkDownImageExtractorRegex().Matches(markdown);
+        return matches.Select(m => m.Groups[2].Value).ToList();
+    }
+    
+    private static List<string> ExtractImageUrlsByString(string? markdown)
+    {
+        var matches = Bas64ImageExtractorRegex().Matches(markdown);
         return matches.Select(m => m.Groups[2].Value).ToList();
     }
 
     private static string ComputeImageHash(byte[] imageBytes)
         => Convert.ToHexStringLower(SHA256.HashData(imageBytes));
-
-   
     
     private static string GenerateGitHubImageUrl(string fileName)
         => $"https://raw.githubusercontent.com/{GithubConfig.Owner}/{GithubConfig.Repo}/{GithubConfig.Branch}/images/{fileName}";
 
-    [GeneratedRegex(StaticBlazeConfig.ImagePattern)]
-    private static partial Regex ImageExtracterRegex();
+    [GeneratedRegex(StaticBlazeConfig.MarkDownImagePattern)]
+    private static partial Regex MarkDownImageExtractorRegex();
+    
+    [GeneratedRegex(StaticBlazeConfig.Base64ImagePattern)]
+    private static partial Regex Bas64ImageExtractorRegex();
 }

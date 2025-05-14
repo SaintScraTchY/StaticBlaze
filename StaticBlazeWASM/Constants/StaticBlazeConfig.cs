@@ -4,7 +4,8 @@ public static class StaticBlazeConfig
 {
     public static string BaseUrl { get; set; }
     
-    public const string ImagePattern = @"!\[.*?\]\(data:image\/(png|jpeg|jpg|gif);base64,([A-Za-z0-9+/=]+)\)";
+    public const string MarkDownImagePattern = @"!\[.*?\]\(data:image\/(png|jpeg|jpg|gif);base64,([A-Za-z0-9+/=]+)\)";
+    public const string Base64ImagePattern = @"data:image\/(png|jpeg|jpg|gif);base64,([A-Za-z0-9+/=]+)";
     public const string BlogAssets = @"StaticBlazeWASM/wwwroot/Static/Blog/assets";
     public const string BlogCategories = @"StaticBlazeWASM/wwwroot/Static/Blog/Categories";
     public const string BlogTags = @"StaticBlazeWASM/wwwroot/Static/Blog/Tags";
