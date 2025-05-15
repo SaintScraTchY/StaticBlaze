@@ -33,7 +33,7 @@ public class GithubService
         var ghPAT = await LocalStorage.GetItemAsStringAsync("GitHubToken");
         if (string.IsNullOrEmpty(ghPAT)) return false;
         
-        var githubApiUrl = $"https://api.github.com/repos/{GithubConfig.Owner}/{GithubConfig.Repo}/contents/{StaticBlazeConfig.BlogDocs}/{fileName}.md";
+        var githubApiUrl = $"https://api.github.com/repos/{GithubConfig.Owner}/{GithubConfig.Repo}/contents/{StaticBlazeConfig.ProjectName}{StaticBlazeConfig.BlogDocs}/{fileName}.md";
 
         var request = new HttpRequestMessage(HttpMethod.Put, githubApiUrl)
         {
@@ -56,7 +56,7 @@ public class GithubService
         var ghPAT = await LocalStorage.GetItemAsStringAsync("GitHubToken");
         if (string.IsNullOrEmpty(ghPAT)) return false;
         
-        var githubApiUrl = $"https://api.github.com/repos/{GithubConfig.Owner}/{GithubConfig.Repo}/contents/{StaticBlazeConfig.BlogPosts}/{fileName}.html";
+        var githubApiUrl = $"https://api.github.com/repos/{GithubConfig.Owner}/{GithubConfig.Repo}/contents/{StaticBlazeConfig.ProjectName}{StaticBlazeConfig.BlogPosts}/{fileName}.html";
 
         var request = new HttpRequestMessage(HttpMethod.Put, githubApiUrl)
         {
@@ -79,7 +79,7 @@ public class GithubService
         var ghPAT = await LocalStorage.GetItemAsStringAsync("GitHubToken");
         if (string.IsNullOrEmpty(ghPAT)) return null;
         
-        var path = $"{StaticBlazeConfig.BlogAssets}/{fileName}"; // Path inside the repository
+        var path = $"{StaticBlazeConfig.ProjectName}{StaticBlazeConfig.ProjectName}{StaticBlazeConfig.BlogAssets}/{fileName}"; // Path inside the repository
         var githubApiUrl = $"https://api.github.com/repos/{GithubConfig.Owner}/{GithubConfig.Repo}/contents/{path}";
 
         var content = new

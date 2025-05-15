@@ -6,11 +6,12 @@ public static class StaticBlazeConfig
     
     public const string MarkDownImagePattern = @"!\[.*?\]\(data:image\/(png|jpeg|jpg|gif);base64,([A-Za-z0-9+/=]+)\)";
     public const string Base64ImagePattern = @"data:image\/(png|jpeg|jpg|gif);base64,([A-Za-z0-9+/=]+)";
-    public const string BlogAssets = @"StaticBlazeWASM/wwwroot/Static/Blog/assets";
-    public const string BlogCategories = @"StaticBlazeWASM/wwwroot/Static/Blog/Categories";
-    public const string BlogTags = @"StaticBlazeWASM/wwwroot/Static/Blog/Tags";
-    public const string BlogPosts = @"StaticBlazeWASM/wwwroot/Static/Blog/Posts";
-    public const string BlogDocs = @"StaticBlazeWASM/wwwroot/Static/Blog/Docs";
-    public const string BlogPages = @"StaticBlazeWASM/wwwroot/Static/Blog/Pages";
-    public const string BlogDB = @"StaticBlazeWASM/wwwroot/Static/Blog/Persistence";
+    public const string ProjectName = "StaticBlazeWASM/";
+    public const string BlogAssets = @"Blog/assets";
+    public const string BlogCategories = @"Blog/Categories";
+    public const string BlogTags = @"Blog/Tags";
+    public const string BlogPosts = @"Blog/Posts";
+    public const string BlogDocs = @"Blog/Docs";
+    public const string BlogPages = @"Blog/Pages";
+    public const string BlogDB = @"Blog/Persistence";
 }

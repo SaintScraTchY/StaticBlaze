@@ -26,15 +26,13 @@ public class BlogService
 
     public async Task<BlogPost?> GetPostAsync(string slug)
     {
-        var docuri = $"{_navigationManager.BaseUri}/{StaticBlazeConfig.BlogDocs}/{slug}.md";
-        var docResponse = _httpClient.GetAsync($"{_navigationManager.BaseUri}/{StaticBlazeConfig.BlogDocs}/{slug}.md");
-        var postResponse = _httpClient.GetAsync($"{_navigationManager.BaseUri}/{StaticBlazeConfig.BlogPosts}/{slug}.html");
+        var docuri = $"{_navigationManager.BaseUri}{StaticBlazeConfig.BlogDocs}/{slug}.md";
+        var docResponse = _httpClient.GetStringAsync($"{_navigationManager.BaseUri}{StaticBlazeConfig.BlogDocs}/{slug}.md");
+        var postResponse = _httpClient.GetStringAsync($"{_navigationManager.BaseUri}{StaticBlazeConfig.BlogPosts}/{slug}.html");
         await Task.WhenAll(docResponse, postResponse);
-        docResponse.Result.EnsureSuccessStatusCode();
-        postResponse.Result.EnsureSuccessStatusCode();
 
-        var postSummary = await docResponse.Result.Content.ReadAsStringAsync();
-        var postContent = await postResponse.Result.Content.ReadAsStringAsync();
+        var postSummary = docResponse.Result;
+        var postContent = postResponse.Result;
         if (string.IsNullOrEmpty(postSummary) || string.IsNullOrEmpty(postContent))
         {
             return null;
