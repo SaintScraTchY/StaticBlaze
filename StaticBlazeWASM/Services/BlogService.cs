@@ -1,4 +1,7 @@
-﻿using System.Net.Http.Json;
+﻿using System.Collections.Generic;
+using System.Net.Http;
+using System.Net.Http.Json;
+using System.Threading.Tasks;
 using Microsoft.AspNetCore.Components;
 using StaticBlazeWASM.Constants;
 using StaticBlazeWASM.Models;
@@ -26,9 +29,8 @@ public class BlogService
 
     public async Task<BlogPost?> GetPostAsync(string slug)
     {
-        var docuri = $"{_navigationManager.BaseUri}{StaticBlazeConfig.BlogDocs}/{slug}.md";
-        var docResponse = _httpClient.GetStringAsync($"{_navigationManager.BaseUri}{StaticBlazeConfig.BlogDocs}/{slug}.md");
-        var postResponse = _httpClient.GetStringAsync($"{_navigationManager.BaseUri}{StaticBlazeConfig.BlogPosts}/{slug}.html");
+        var docResponse = _httpClient.GetStringAsync($"{_navigationManager.BaseUri}{StaticBlazeConfig.BlogDocs}/{slug}.md.gz");
+        var postResponse = _httpClient.GetStringAsync($"{_navigationManager.BaseUri}{StaticBlazeConfig.BlogPosts}/{slug}.html.gz");
         await Task.WhenAll(docResponse, postResponse);
 
         var postSummary = docResponse.Result;

@@ -3,10 +3,27 @@
 @using StaticBlazeWASM.Services
 @inject BlogService BlogService
 
+@if (blogPost is null)
+{
+    <p class="text-center text-red-500 mt-10">Post not found.</p>
+}
+else
+{
+    <article class="prose prose-neutral lg:prose-xl dark:prose-invert mx-auto py-8 max-w-4xl">
+        <h1>@blogPost.Title</h1>
 
-<article class="prose lg:prose-xl dark:prose-invert mx-auto py-8">
-    <h1>@blogPost?.Title</h1>
-    <img src="@blogPost?.Thumbnail" class="w-full rounded-lg mb-4 shadow-lg" alt="@blogPost?.Title - thumbnail"/>
-    <div class="text-sm text-gray-400 mb-4">@blogPost?.Author</div>
-    <div>@((MarkupString)blogPost?.Content)</div>
-</article>
+        @if (!string.IsNullOrEmpty(blogPost.Thumbnail))
+        {
+            <img src="@blogPost.Thumbnail"
+                 alt="@blogPost.Title - thumbnail"
+                 class="rounded-xl shadow-md max-h-[400px] w-auto mx-auto my-6 object-contain" />
+        }
+
+        <div class="flex justify-between text-sm text-gray-500 dark:text-gray-400 mb-6">
+            <span>@blogPost.Author</span>
+            <span>@blogPost.CreatedDateTime.ToString("MMMM dd, yyyy")</span>
+        </div>
+
+        <div>@((MarkupString)blogPost.Content)</div>
+    </article>
+}

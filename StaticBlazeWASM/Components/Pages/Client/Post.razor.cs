@@ -1,4 +1,5 @@
-﻿using Microsoft.AspNetCore.Components;
+﻿using System.Threading.Tasks;
+using Microsoft.AspNetCore.Components;
 using StaticBlazeWASM.Models;
 
 namespace StaticBlazeWASM.Components.Pages.Client;

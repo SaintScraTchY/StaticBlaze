@@ -1,13 +1,18 @@
 <Project Sdk="Microsoft.NET.Sdk.BlazorWebAssembly">
-    <Import Project="TailwindIntegration.targets"/>
 
     <PropertyGroup>
         <TargetFramework>net9.0</TargetFramework>
         <Nullable>enable</Nullable>
         <ImplicitUsings>enable</ImplicitUsings>
-        <TailwindCssInput>wwwroot\css\app.css</TailwindCssInput>
+        <TailwindCssInput>Styles\tailwind-client.css</TailwindCssInput>
         <TailwindCssOutput>wwwroot\css\app.out.css</TailwindCssOutput>
     </PropertyGroup>
+
+    <Target Name="TailwindBuild" BeforeTargets="Build">
+        <Exec
+            Command="npx tailwindcss -i $(TailwindCssInput) -o $(TailwindCssOutput)"
+            WorkingDirectory="$(ProjectDir)" />
+    </Target>
 
     <ItemGroup>
         <PackageReference Include="Blazored.LocalStorage" Version="4.5.0" />
@@ -21,7 +26,7 @@
     </ItemGroup>
 
     <ItemGroup>
-        <Content Include="Blog\**\*.*" Exclude="**\*.gz" CopyToOutputDirectory="PreserveNewest" 
+        <Content Include="Blog\**\*.*" CopyToOutputDirectory="PreserveNewest" 
                  Link="wwwroot\Blog\%(RecursiveDir)%(Filename)%(Extension)"/>
     </ItemGroup>
 
@@ -42,3 +47,4 @@
       </Reference>
     </ItemGroup>
 </Project>
+
