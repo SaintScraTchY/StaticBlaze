@@ -9,25 +9,26 @@
     </PropertyGroup>
 
     <Target Name="TailwindBuild" BeforeTargets="PreBuildEvent">
-        <Exec
-            Command="npx tailwindcss -i $(TailwindCssInput) -o $(TailwindCssOutput) --minify"
-            WorkingDirectory="$(ProjectDir)" />
+        <Exec Command="npx tailwindcss -i $(TailwindCssInput) -o $(TailwindCssOutput) --minify" WorkingDirectory="$(ProjectDir)" />
     </Target>
     
     <ItemGroup>
+        <PackageReference Include="BlazorComponentUtilities" Version="1.8.0" />
         <PackageReference Include="Blazored.LocalStorage" Version="4.5.0" />
+        <PackageReference Include="Blazorise.Animate" Version="1.7.6" />
         <PackageReference Include="HeroIcons.Blazor" Version="1.0.6" />
+        <PackageReference Include="Humanizer.Core" Version="2.14.1" />
+        <PackageReference Include="Ignis.Components.HeadlessUI" Version="1.4.0" />
         <PackageReference Include="Markdig" Version="0.40.0" />
-        <PackageReference Include="Microsoft.AspNetCore.Components.WebAssembly" Version="9.0.0-*"/>
-        <PackageReference Include="Microsoft.AspNetCore.Components.WebAssembly.DevServer" Version="9.0.0-*" PrivateAssets="all"/>
+        <PackageReference Include="Microsoft.AspNetCore.Components.WebAssembly" Version="9.0.0-*" />
+        <PackageReference Include="Microsoft.AspNetCore.Components.WebAssembly.DevServer" Version="9.0.0-*" PrivateAssets="all" />
         <PackageReference Include="Mime" Version="3.7.0" />
         <PackageReference Include="Radix" Version="4.9.3.1" />
         <PackageReference Include="SixLabors.ImageSharp" Version="3.1.7" />
     </ItemGroup>
 
     <ItemGroup>
-        <Content Include="Blog\**\*.*" CopyToOutputDirectory="PreserveNewest" 
-                 Link="wwwroot\Blog\%(RecursiveDir)%(Filename)%(Extension)"/>
+        <Content Include="Blog\**\*.*" CopyToOutputDirectory="PreserveNewest" Link="wwwroot\Blog\%(RecursiveDir)%(Filename)%(Extension)" />
     </ItemGroup>
 
     <ItemGroup>

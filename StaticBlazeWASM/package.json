@@ -1,0 +1,16 @@
+{
+  "dependencies": {
+    "@tailwindcss/cli": "^4.1.7",
+    "tailwindcss": "^4.1.7"
+  },
+  "scripts": {
+    "build:css": "tailwindcss -i ./wwwroot/css/dist.css -o ./wwwroot/css/dist.out.css --minify",
+    "watch": "tailwindcss -i ./wwwroot/css/dist.css -o ./wwwroot/css/dist.out.css --minify --watch"
+  },
+  "devDependencies": {
+    "@tailwindcss/aspect-ratio": "^0.4.2",
+    "@tailwindcss/forms": "^0.5.10",
+    "@tailwindcss/typography": "^0.5.16",
+    "tailwindcss-animate": "^1.0.7"
+  }
+}

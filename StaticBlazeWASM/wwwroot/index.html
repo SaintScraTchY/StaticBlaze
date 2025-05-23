@@ -7,6 +7,7 @@
     <title>StaticBlazeWASM</title>
     <base href="/" />
     <link rel="stylesheet" href="css/app.css" />
+    <link rel="stylesheet" href="css/site.css" />
     <link rel="stylesheet" href="css/dist.out.css" />
     <link rel="icon" type="image/png" href="favicon.png" />
 
@@ -29,6 +30,14 @@
 
     <!-- Your module (loaded as type=module) -->
     <script type="module" src="Js/MarkdownEditor.js"></script>
+
+    <script>
+        // Set initial theme without system preference check
+        if (!localStorage.getItem('theme')) {
+            localStorage.setItem('theme', 'light');
+            document.documentElement.classList.remove('dark');
+        }
+    </script>
 </head>
 
 <body>
