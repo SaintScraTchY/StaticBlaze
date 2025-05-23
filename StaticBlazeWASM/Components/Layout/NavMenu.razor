@@ -1,22 +1,97 @@
-<nav class="w-full bg-white dark:bg-gray-800 shadow-md py-4">
-    <div class="container mx-auto flex justify-between items-center px-6">
-        <a href="/" class="text-xl font-semibold text-gray-900 dark:text-gray-100">MyBlog</a>
+<nav class="fixed w-full z-50 backdrop-blur-lg bg-white/70 dark:bg-gray-900/70 border-b border-gray-200/20 dark:border-gray-700/20 transition-all duration-300">
+    <div class="container mx-auto px-4 sm:px-6 lg:px-8">
+        <div class="flex items-center justify-between h-16">
+            <!-- Logo and Brand -->
+            <a href="/" class="flex items-center space-x-3 group">
+                <div class="w-8 h-8 bg-gradient-to-br from-blue-500 to-purple-600 rounded-lg flex items-center justify-center transform group-hover:rotate-6 transition-all duration-300">
+                    <span class="text-white font-bold text-xl">B</span>
+                </div>
+                <span class="text-xl font-bold bg-gradient-to-r from-blue-600 to-purple-600 bg-clip-text text-transparent dark:from-blue-400 dark:to-purple-400">
+                    MyBlog
+                </span>
+            </a>
 
-        <div class="hidden md:flex space-x-6">
-            <a href="/blogs" class="text-gray-700 dark:text-gray-200 hover:text-gray-900 dark:hover:text-white">Blogs</a>
-            <a href="/about" class="text-gray-700 dark:text-gray-300 hover:text-gray-900 dark:hover:text-white">About</a>
-            <a href="/contact" class="text-gray-700 dark:text-gray-300 hover:text-gray-900 dark:hover:text-white">Contact</a>
+            <!-- Desktop Navigation -->
+            <div class="hidden md:flex items-center space-x-8">
+                <NavLink href="/blogs" class="nav-link group">
+                    <span class="relative px-1">
+                        Blogs
+                        <span class="absolute -bottom-1 left-0 w-0 h-0.5 bg-gradient-to-r from-blue-500 to-purple-600 group-hover:w-full transition-all duration-300"></span>
+                    </span>
+                </NavLink>
+                <NavLink href="/about" class="nav-link group">
+                    <span class="relative px-1">
+                        About
+                        <span class="absolute -bottom-1 left-0 w-0 h-0.5 bg-gradient-to-r from-blue-500 to-purple-600 group-hover:w-full transition-all duration-300"></span>
+                    </span>
+                </NavLink>
+                <NavLink href="/contact" class="nav-link group">
+                    <span class="relative px-1">
+                        Contact
+                        <span class="absolute -bottom-1 left-0 w-0 h-0.5 bg-gradient-to-r from-blue-500 to-purple-600 group-hover:w-full transition-all duration-300"></span>
+                    </span>
+                </NavLink>
+            </div>
+
+            <!-- Right Side Actions -->
+            <div class="flex items-center space-x-4">
+                <button @onclick="ToggleDarkMode" 
+                        class="p-2 rounded-lg bg-gray-100 dark:bg-gray-800 hover:bg-gray-200 dark:hover:bg-gray-700 
+                               transform hover:scale-110 transition-all duration-300 focus:outline-none">
+                    @if (IsDarkMode)
+                    {
+                        <span class="text-xl">🌙</span>
+                    }
+                    else
+                    {
+                        <span class="text-xl">☀️</span>
+                    }
+                </button>
+
+                <a href="/login" class="relative inline-flex items-center px-6 py-2 overflow-hidden text-white font-medium 
+                                     rounded-full group hover:scale-105 transition-all duration-300">
+                    <span class="absolute left-0 top-0 w-full h-full bg-gradient-to-br from-blue-500 to-purple-600 
+                                opacity-90 group-hover:opacity-100 transition-opacity duration-300 rounded-full"></span>
+                    <span class="relative">Login</span>
+                </a>
+
+                <!-- Mobile Menu Button -->
+                <button @onclick="ToggleMobileMenu" class="md:hidden p-2 rounded-lg hover:bg-gray-100 dark:hover:bg-gray-800 
+                                                         transition-colors duration-300 focus:outline-none">
+                    <svg class="w-6 h-6 text-gray-600 dark:text-gray-300" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                        @if (_isMobileMenuOpen)
+                        {
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12" />
+                        }
+                        else
+                        {
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16M4 18h16" />
+                        }
+                    </svg>
+                </button>
+            </div>
         </div>
 
-        <div class="flex items-center space-x-4">
-            <button @onclick="ToggleDarkMode" class="p-2 rounded-md bg-gray-200 dark:bg-gray-700 hover:bg-gray-300 dark:hover:bg-gray-600">
-                @(_isDarkMode ? "☀️" : "🌙")
-            </button>
-            <a href="/login" class="px-4 py-2 bg-blue-500 text-white rounded-md hover:bg-blue-600">Login</a>
+        <!-- Mobile Menu -->
+        <div class="@(_isMobileMenuOpen ? "max-h-64" : "max-h-0") md:hidden overflow-hidden transition-all duration-300 ease-in-out">
+            <div class="px-2 pt-2 pb-3 space-y-1">
+                <NavLink href="/blogs" class="mobile-nav-link">Blogs</NavLink>
+                <NavLink href="/about" class="mobile-nav-link">About</NavLink>
+                <NavLink href="/contact" class="mobile-nav-link">Contact</NavLink>
+            </div>
         </div>
     </div>
 </nav>
 
-@code {
-   
-}
+<style>
+    .nav-link {
+        @@apply text-gray-600 dark:text-gray-300 hover:text-gray-900 dark:hover:text-white transition-colors duration-300;
+    }
+
+    .mobile-nav-link {
+        @@apply block px-3 py-2 rounded-md text-base font-medium text-gray-600 dark:text-gray-300 
+               hover:text-gray-900 dark:hover:text-white hover:bg-gray-100 dark:hover:bg-gray-800 
+               transition-all duration-300;
+    }
+</style>
+

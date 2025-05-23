@@ -1,18 +1,44 @@
 ﻿@page "/login"
 
-<div class="flex flex-col items-center justify-center min-h-screen bg-gray-100 dark:bg-gray-900">
-    <div class="w-full max-w-md bg-white dark:bg-gray-800 p-6 rounded-lg shadow-md">
-        <h2 class="text-2xl font-semibold text-gray-900 dark:text-white text-center">Login</h2>
+<div class="relative min-h-screen overflow-hidden bg-gray-50 dark:bg-gray-900">
+    <!-- Animated Background Gradients -->
+    <div class="absolute inset-0 overflow-hidden">
+        <div class="absolute -inset-[10px] opacity-50">
+            <div class="absolute top-0 -left-4 w-72 h-72 bg-purple-300 dark:bg-purple-700 rounded-full mix-blend-multiply dark:mix-blend-soft-light filter blur-xl animate-blob"></div>
+            <div class="absolute top-0 -right-4 w-72 h-72 bg-yellow-300 dark:bg-yellow-700 rounded-full mix-blend-multiply dark:mix-blend-soft-light filter blur-xl animate-blob animation-delay-2000"></div>
+            <div class="absolute -bottom-8 left-20 w-72 h-72 bg-pink-300 dark:bg-pink-700 rounded-full mix-blend-multiply dark:mix-blend-soft-light filter blur-xl animate-blob animation-delay-4000"></div>
+        </div>
+    </div>
 
-        <form @onsubmit="HandleLogin">
-            <div class="mt-4">
-                <label class="block text-gray-700 dark:text-gray-300">GitHub Token</label>
-                <input type="password" @bind="GitHubToken" class="w-full px-4 py-2 mt-2 border rounded-lg dark:bg-gray-700 dark:text-white" required />
-            </div>
+    <!-- Login Form Container -->
+    <div class="relative flex flex-col items-center justify-center min-h-screen">
+        <div class="w-full max-w-md backdrop-blur-lg bg-white/30 dark:bg-gray-800/30 p-8 rounded-xl shadow-2xl border border-white/20 dark:border-gray-700/20">
+            <h2 class="text-3xl font-bold mb-6 bg-gradient-to-r from-blue-600 to-purple-600 bg-clip-text text-transparent">Login</h2>
 
-            <div class="mt-4">
-                <button type="submit" class="w-full bg-blue-500 hover:bg-blue-600 text-white py-2 px-4 rounded-lg">Login</button>
-            </div>
-        </form>
+            <form @onsubmit="HandleLogin">
+                <div class="space-y-4">
+                    <div>
+                        <label class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">GitHub Token</label>
+                        <input type="password" 
+                               @bind="GitHubToken" 
+                               class="w-full px-4 py-2 rounded-lg border border-gray-200/50 dark:border-gray-700/50 
+                                      bg-white/50 dark:bg-gray-800/50 backdrop-blur-sm
+                                      focus:ring-2 focus:ring-blue-500 dark:focus:ring-blue-400 
+                                      focus:border-transparent outline-none
+                                      text-gray-900 dark:text-white transition-all duration-200" 
+                               required />
+                    </div>
+
+                    <button type="submit" 
+                            class="w-full px-6 py-3 text-white font-medium 
+                                   bg-gradient-to-r from-blue-500 to-purple-600 
+                                   rounded-lg shadow-lg hover:shadow-xl 
+                                   transform hover:-translate-y-0.5 
+                                   transition-all duration-200">
+                        Login
+                    </button>
+                </div>
+            </form>
+        </div>
     </div>
 </div>

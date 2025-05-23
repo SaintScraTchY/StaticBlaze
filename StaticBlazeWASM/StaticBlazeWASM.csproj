@@ -4,16 +4,16 @@
         <TargetFramework>net9.0</TargetFramework>
         <Nullable>enable</Nullable>
         <ImplicitUsings>enable</ImplicitUsings>
-        <TailwindCssInput>Styles\tailwind-client.css</TailwindCssInput>
-        <TailwindCssOutput>wwwroot\css\app.out.css</TailwindCssOutput>
+        <TailwindCssInput>wwwroot/css/dist.css</TailwindCssInput>
+        <TailwindCssOutput>wwwroot/css/dist.out.css</TailwindCssOutput>
     </PropertyGroup>
 
-    <Target Name="TailwindBuild" BeforeTargets="Build">
+    <Target Name="TailwindBuild" BeforeTargets="PreBuildEvent">
         <Exec
-            Command="npx tailwindcss -i $(TailwindCssInput) -o $(TailwindCssOutput)"
+            Command="npx tailwindcss -i $(TailwindCssInput) -o $(TailwindCssOutput) --minify"
             WorkingDirectory="$(ProjectDir)" />
     </Target>
-
+    
     <ItemGroup>
         <PackageReference Include="Blazored.LocalStorage" Version="4.5.0" />
         <PackageReference Include="HeroIcons.Blazor" Version="1.0.6" />
@@ -28,10 +28,6 @@
     <ItemGroup>
         <Content Include="Blog\**\*.*" CopyToOutputDirectory="PreserveNewest" 
                  Link="wwwroot\Blog\%(RecursiveDir)%(Filename)%(Extension)"/>
-    </ItemGroup>
-
-    <ItemGroup>
-        <None Remove="Blog\**\*.gz" />
     </ItemGroup>
 
     <ItemGroup>
