@@ -1,7 +1,7 @@
 ﻿@inherits LayoutComponentBase
 @using Blazorise.Animate
 
-<div class="overflow-x-hidden @(_isDarkMode ? "dark" : "") min-h-screen bg-gradient-to-br from-gray-50 via-gray-100 to-gray-50 dark:from-gray-900 dark:via-gray-800 dark:to-gray-900 transition-all duration-400">
+<div class="overflow-x-hidden min-h-screen bg-gradient-to-br from-gray-50 via-gray-100 to-gray-50 dark:from-gray-900 dark:via-gray-800 dark:to-gray-900 transition-all duration-400" data-theme="@(_isDarkMode ? "dark" : "light")">
     <!-- Sidebar -->
     <aside class="@($"fixed inset-y-0 left-0 {(_isSidebarOpen ? "w-72" : "w-20")} bg-white/90 dark:bg-gray-800/90 backdrop-blur-xl transform transition-all duration-500 ease-in-out shadow-lg z-50 flex flex-col border-r border-gray-200/50 dark:border-gray-700/50 overflow-x-hidden")">
         <!-- Logo & Toggle -->
@@ -30,7 +30,7 @@
         <!-- Navigation -->
         <nav class="flex-1 overflow-y-auto py-4 px-3 overflow-x-hidden">
             <div class="space-y-2 overflow-x-hidden">
-                <NavLink href="/admin/dashboard" class="@GetNavLinkClass" Match="NavLinkMatch.All">
+                <NavLink href="/admin/dashboard" class="@GetNavLinkClass" Match="NavLinkMatch.All"> 
                     <div class="flex items-center space-x-3">
                     <svg class="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                         <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 12l2-2m0 0l7-7 7 7M5 10v10a1 1 0 001 1h3m10-11l2 2m-2-2v10a1 1 0 01-1 1h-3m-6 0a1 1 0 001-1v-4a1 1 0 011-1h2a1 1 0 011 1v4a1 1 0 001 1m-6 0h6"/>

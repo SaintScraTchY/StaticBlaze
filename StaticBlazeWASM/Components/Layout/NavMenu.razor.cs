@@ -14,7 +14,7 @@ public partial class NavMenu : ComponentBase
     private IJSRuntime JSRuntime { get; set; } = null!;
 
     private bool _isMobileMenuOpen;
-    
+
     [Parameter]
     public bool IsDarkMode { get; set; }
 
@@ -43,7 +43,7 @@ public partial class NavMenu : ComponentBase
         
         await ApplyTheme(IsDarkMode);
     }
-
+    
     private async Task ToggleDarkMode()
     {
         IsDarkMode = !IsDarkMode;
