@@ -1,10 +1,5 @@
-﻿using System;
-using System.Collections.Generic;
-using System.IO;
-using System.Linq;
-using System.Security.Cryptography;
+﻿using System.Security.Cryptography;
 using System.Text.RegularExpressions;
-using System.Threading.Tasks;
 using HeyRed.Mime;
 using Microsoft.AspNetCore.Components;
 using Microsoft.AspNetCore.Components.Forms;
@@ -21,14 +16,13 @@ namespace StaticBlazeWASM.Components.Pages.Admin;
 
 public partial class CreatePost : ComponentBase
 {
-    private readonly GithubService _githubService;
+    private readonly IGithubService _githubService;
     
     private int uploadProgress = 0;
     private string uploadStatusMessage = "Starting upload...";
 
-    public CreatePost(GithubService githubService)
+    public CreatePost(IGithubService githubService)
     {
-        Console.WriteLine($"HostEnvBase : {GithubConfig.Branch}");
         _githubService = githubService;
     }
     

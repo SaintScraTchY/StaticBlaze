@@ -7,26 +7,18 @@ namespace StaticBlazeWASM.Components.Pages.Admin;
 
 public partial class Dashboard : ComponentBase
 {
-    private readonly NavigationManager Navigation;
-
-    public Dashboard(NavigationManager navigation)
-    {
-        Navigation = navigation;
-    }
+    [Inject] private NavigationManager Navigation { get; set; }
+    [Inject] private IBlogService _blogService { get; set; }
 
     private List<MetaPost> RecentPosts { get; set; } = new();
     private List<ActivityItem> RecentActivities { get; set; } = new();
     private DashboardStats Stats { get; set; } = new();
 
     private string GetTimeAgo(DateTime date) => date.Humanize();
-    
+
     private List<ActivityLog> RecentActivity { get; set; } = new();
 
-    [Inject]
-    private BlogService BlogService { get; set; } = default!;
-
-    [Inject]
-    private NavigationManager NavigationManager { get; set; } = default!;
+    [Inject] private IBlogService BlogService { get; set; } = default!;
 
     protected override async Task OnInitializedAsync()
     {
@@ -40,7 +32,7 @@ public partial class Dashboard : ComponentBase
         RecentActivities = await BlogService.GetRecentActivity(5);
     }
 
-    private void NavigateToEditPost(string postId) => NavigationManager.NavigateTo($"/Admin/Posts/Edit/{postId}");
+    private void NavigateToEditPost(string postId) => Navigation.NavigateTo($"/Admin/Posts/Edit/{postId}");
     private void NavigateToNewPost() => Navigation.NavigateTo("/admin/posts/new");
     private void NavigateToTags() => Navigation.NavigateTo("/admin/tags");
     private void NavigateToImages() => Navigation.NavigateTo("/admin/media");

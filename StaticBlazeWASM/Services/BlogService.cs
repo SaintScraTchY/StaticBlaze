@@ -11,37 +11,49 @@ namespace StaticBlazeWASM.Services;
 public class BlogService : IBlogService
 {
     private readonly HttpClient _httpClient;
+    private readonly IGithubService _githubService;
+    private readonly IAnalyticsService _analyticsService;
     private readonly NavigationManager _navigationManager;
 
-    public BlogService(HttpClient httpClient, NavigationManager navigationManager)
+    public BlogService(HttpClient httpClient, NavigationManager navigationManager, IGithubService githubService, IAnalyticsService analyticsService)
     {
         _httpClient = httpClient;
         _navigationManager = navigationManager;
+        _githubService = githubService;
+        _analyticsService = analyticsService;
     }
 
     public async Task<DashboardStats> GetDashboardStats()
     {
-        
-        // TODO: Replace with actual API call
-        // Simulated data for demonstration
-        return new DashboardStats
+        var currentPosts = await _githubService.GetTotalPosts();
+        var lastCommitDate = await _githubService.GetLastCommitDate();
+        var (views, activeUsers) = await _analyticsService.GetAnalyticsData();
+        var averageLoadTime = await _analyticsService.GetAverageLoadTime();
+
+        // Calculate growth percentages
+        // This is a simplified calculation - you might want to implement more sophisticated logic
+        var stats = new DashboardStats
         {
-            TotalPosts = 42,
-            TotalViews = 12500,
-            ActiveUsers = 156,
-            TotalComments = 284,
+            TotalPosts = currentPosts,
+            TotalViews = views,
+            ActiveUsers = activeUsers,
+            TotalComments = 0, // GitHub doesn't provide this directly - consider using GitHub Discussions or a separate comment system
             
-            PostsGrowth = 12.5,
-            ViewsGrowth = 25.8,
-            UsersGrowth = -5.2,
-            CommentsGrowth = 8.7,
+            // Example growth calculations (you should implement proper historical data comparison)
+            PostsGrowth = 5.0,
+            ViewsGrowth = 10.0,
+            UsersGrowth = 15.0,
+            CommentsGrowth = 0,
             
-            AverageLoadTime = 250,
-            LoadTimePercentage = 85,
-            ServerResponseTime = 120,
-            ServerResponsePercentage = 92,
+            // Performance metrics
+            AverageLoadTime = (int)(averageLoadTime * 1000), // Convert to milliseconds
+            LoadTimePercentage = 85.0,
+            ServerResponseTime = 200,
+            ServerResponsePercentage = 95.0,
             UptimePercentage = 99.9
         };
+
+        return stats;
     }
 
     public async Task<List<MetaPost>> GetPostsAsync()

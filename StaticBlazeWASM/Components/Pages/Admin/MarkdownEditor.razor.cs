@@ -16,13 +16,13 @@ public partial class MarkdownEditor : ComponentBase
     private IJSObjectReference _mdModule;
     private IJSObjectReference _editor;
     private bool _isInitialized;
-    private readonly GithubService _githubService;
+    private readonly IGithubService _githubService;
 
 
     [Parameter] public string Content { get; set; } = string.Empty;
     [Parameter] public EventCallback<string> ContentChanged { get; set; }
 
-    public MarkdownEditor(GithubService githubService)
+    public MarkdownEditor(IGithubService githubService)
     {
         _githubService = githubService;
     }

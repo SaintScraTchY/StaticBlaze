@@ -2,7 +2,7 @@
 
 namespace StaticBlazeWASM.Models;
 
-public record GitHubContent
+public record GitHubDownloadUrl
 {
     [JsonPropertyName("download_url")]
     public string DownloadUrl { get; set; }

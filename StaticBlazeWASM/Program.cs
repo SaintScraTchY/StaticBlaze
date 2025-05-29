@@ -13,8 +13,9 @@ var builder = WebAssemblyHostBuilder.CreateDefault(args);
 builder.RootComponents.Add<App>("#app");
 builder.RootComponents.Add<HeadOutlet>("head::after");
 
-builder.Services.AddScoped<GithubService>();
-builder.Services.AddScoped<BlogService>();
+builder.Services.AddScoped<IGithubService,GithubService>();
+builder.Services.AddScoped<IAnalyticsService,AnalyticsService>();
+builder.Services.AddScoped<IBlogService,BlogService>();
 
 builder.Services.AddBlazoredLocalStorage();
 builder.SetGitConfig();

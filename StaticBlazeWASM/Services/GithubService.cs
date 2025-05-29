@@ -10,15 +10,18 @@ using StaticBlazeWASM.Utilities;
 
 namespace StaticBlazeWASM.Services;
 
-public class GithubService
+public class GithubService : IGithubService
 {
-    private readonly HttpClient Http;
+    private readonly HttpClient _httpClient;
     private readonly ILocalStorageService LocalStorage;
 
-    public GithubService(HttpClient http, ILocalStorageService localStorage)
+    public GithubService(HttpClient httpClient, ILocalStorageService localStorage)
     {
-        Http = http;
+        _httpClient = httpClient;
         LocalStorage = localStorage;
+        _httpClient = httpClient;
+        _httpClient.DefaultRequestHeaders.Add("Authorization", $"Bearer {LocalStorage.GetItemAsStringAsync("GitHubToken")}");
+        _httpClient.DefaultRequestHeaders.Add("User-Agent", "StaticBlaze");
     }
 
     public async Task<bool> ProcessMarkDown(BlogPost metaPost, string message,string fileName)
@@ -50,7 +53,7 @@ public class GithubService
         request.Headers.UserAgent.ParseAdd("StaticBlazeWASM");
         request.Headers.Authorization = new AuthenticationHeaderValue("token",ghPAT);
 
-        var response = await Http.SendAsync(request);
+        var response = await _httpClient.SendAsync(request);
         return response.IsSuccessStatusCode;
     }
     
@@ -73,7 +76,7 @@ public class GithubService
         request.Headers.UserAgent.ParseAdd("StaticBlazeWASM");
         request.Headers.Authorization = new AuthenticationHeaderValue("token",ghPAT);
 
-        var response = await Http.SendAsync(request);
+        var response = await _httpClient.SendAsync(request);
         return response.IsSuccessStatusCode;
     }
     
@@ -82,7 +85,7 @@ public class GithubService
         var ghPAT = await LocalStorage.GetItemAsStringAsync("GitHubToken");
         if (string.IsNullOrEmpty(ghPAT)) return null;
         
-        var path = $"{StaticBlazeConfig.ProjectName}{StaticBlazeConfig.ProjectName}{StaticBlazeConfig.BlogAssets}/{fileName}"; // Path inside the repository
+        var path = $"{StaticBlazeConfig.ProjectName}{StaticBlazeConfig.BlogAssets}/{fileName}"; // Path inside the repository
         var githubApiUrl = $"https://api.github.com/repos/{GithubConfig.Owner}/{GithubConfig.Repo}/contents/{path}";
 
         var content = new
@@ -99,10 +102,46 @@ public class GithubService
         request.Headers.UserAgent.ParseAdd("StaticBlazeWASM");
         request.Headers.Authorization = new AuthenticationHeaderValue("token", ghPAT);
 
-        var response = await Http.SendAsync(request);
+        var response = await _httpClient.SendAsync(request);
         if (!response.IsSuccessStatusCode) return string.Empty;
         
         var responseData = await response.Content.ReadFromJsonAsync<GitHubUploadResponse>();
-        return responseData?.Content?.DownloadUrl ?? string.Empty;
+        return responseData?.DownloadUrl?.DownloadUrl ?? string.Empty;
+    }
+    
+    public async Task<int> GetTotalPosts()
+    {
+        _httpClient.DefaultRequestHeaders.Add("Authorization", $"Token {LocalStorage.GetItemAsStringAsync("GitHubToken")}");
+        _httpClient.DefaultRequestHeaders.Add("User-Agent", "StaticBlaze");
+        var response = await _httpClient.GetAsync($"https://api.github.com/repos/{GithubConfig.Owner}/{GithubConfig.Repo}/{StaticBlazeConfig.ProjectName}{StaticBlazeConfig.BlogAssets}");
+        var files = await response.Content.ReadFromJsonAsync<List<GitHubContentFileName>>();
+        return files?.Count ?? 0;
+    }
+
+    public async Task<DateTime?> GetLastCommitDate()
+    {
+        _httpClient.DefaultRequestHeaders.Add("Authorization", $"Bearer {LocalStorage.GetItemAsStringAsync("GitHubToken")}");
+        _httpClient.DefaultRequestHeaders.Add("User-Agent", "StaticBlaze");
+        var response = await _httpClient.GetAsync($"https://api.github.com/repos/{GithubConfig.Owner}/{GithubConfig.Repo}/commits?path=_posts&per_page=1");
+        var commits = await response.Content.ReadFromJsonAsync<List<GitHubCommit>>();
+        return commits?.FirstOrDefault()?.commit.author.date;
+    }
+
+    private record GitHubContentFileName
+    {
+        public string name { get; set; } = string.Empty;
+    }
+
+    private class GitHubCommit
+    {
+        public CommitInfo commit { get; set; } = new();
+        public class CommitInfo
+        {
+            public AuthorInfo author { get; set; } = new();
+        }
+        public class AuthorInfo
+        {
+            public DateTime date { get; set; }
+        }
     }
 }

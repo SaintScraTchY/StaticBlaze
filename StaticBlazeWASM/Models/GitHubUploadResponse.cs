@@ -2,5 +2,5 @@
 
 public record GitHubUploadResponse
 {
-    public GitHubContent Content { get; set; }
+    public GitHubDownloadUrl DownloadUrl { get; set; }
 }
