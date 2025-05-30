@@ -1,0 +1,65 @@
+/* /Components/Layout/MainLayout.razor.rz.scp.css */
+.page[b-sqob98uqsx] {
+    position: relative;
+    display: flex;
+    flex-direction: column;
+}
+
+main[b-sqob98uqsx] {
+    flex: 1;
+}
+
+.sidebar[b-sqob98uqsx] {
+    background-image: linear-gradient(180deg, rgb(5, 39, 103) 0%, #3a0647 70%);
+}
+
+.top-row[b-sqob98uqsx] {
+    background-color: #f7f7f7;
+    border-bottom: 1px solid #d6d5d5;
+    justify-content: flex-end;
+    height: 3.5rem;
+    display: flex;
+    align-items: center;
+}
+
+@media (max-width: 640.98px) {
+    .top-row[b-sqob98uqsx] {
+        justify-content: space-between;
+    }
+}
+
+@media (min-width: 641px) {
+    .page[b-sqob98uqsx] {
+        flex-direction: row;
+    }
+
+    .sidebar[b-sqob98uqsx] {
+        width: 250px;
+        height: 100vh;
+        position: sticky;
+        top: 0;
+    }
+
+    .top-row[b-sqob98uqsx] {
+        position: sticky;
+        top: 0;
+        z-index: 1;
+    }
+
+    .top-row[b-sqob98uqsx], article[b-sqob98uqsx] {
+        padding-left: 2rem !important;
+        padding-right: 1.5rem !important;
+    }
+}
+
+/* /Components/Layout/NavMenu.Razor.rz.scp.css */
+.nav-link[b-qq0w5u1y3j] {
+    @apply text-gray-600 dark:text-gray-300 hover:text-gray-900 dark:hover:text-white transition-colors duration-300;
+}
+
+.mobile-nav-link[b-qq0w5u1y3j] {
+    @apply block px-3 py-2 rounded-md text-base font-medium text-gray-600 dark:text-gray-300
+    hover:text-gray-900 dark:hover:text-white hover:bg-gray-100 dark:hover:bg-gray-800
+transition-all duration-300;
+}
+/* /Components/Pages/Client/Post.razor.rz.scp.css */

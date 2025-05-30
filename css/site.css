@@ -1,0 +1,10 @@
+﻿/* Add to your site.css or similar */
+.sidebar-transition {
+    transition-property: all;
+    transition-timing-function: cubic-bezier(0.4, 0, 0.2, 1);
+    transition-duration: 300ms;
+}
+
+.nav-text {
+    transition: opacity 150ms ease-in-out, transform 150ms ease-in-out;
+}
