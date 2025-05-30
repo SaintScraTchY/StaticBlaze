@@ -35,9 +35,19 @@ jobs:
 
       - name: 🏗️ Build Blazor Project
         run: dotnet publish ./StaticBlaze/StaticBlaze.csproj -c Release -p:GHPages=true -o published --no-restore
+         ls -la published/wwwroot  # Debug output
 
       - name: 📄 Add .nojekyll File
-        run: touch published/wwwroot/.nojekyll
+        run: |
+          mkdir -p published/wwwroot
+          touch published/wwwroot/.nojekyll
+
+      - name: 🔍 Verify Build Output
+        run: |
+          echo "Build output contents:"
+          ls -la published
+          ls -la published/wwwroot
+          [ -d "published/wwwroot" ] || exit 1
 
       - name: 🔍 Check if GithubPage branch exists
         id: check-branch
