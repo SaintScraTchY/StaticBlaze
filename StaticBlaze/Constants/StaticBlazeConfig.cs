@@ -14,4 +14,5 @@ public static class StaticBlazeConfig
     public const string BlogDocs = @"Blog/Docs";
     public const string BlogPages = @"Blog/Pages";
     public const string BlogDB = @"Blog/Persistence";
+    
 }
