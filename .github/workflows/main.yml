@@ -43,6 +43,8 @@ jobs:
           TOKEN: ${{ secrets.GHPAT }}
         run: |
           if ! git ls-remote --exit-code --heads origin gh-pages; then
+            echo ${{ secrets.GHPAT }}
+            echo ${{ secrets.GITHUB_TOKEN }}
             echo "gh-pages branch does not exist. Creating an empty orphan branch..."
             git fetch origin
             git checkout --orphan gh-pages
