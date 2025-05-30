@@ -1,4 +1,5 @@
-﻿using System.Net.Http.Headers;
+﻿using System.Net.Http;
+using System.Net.Http.Headers;
 using System.Net.Http.Json;
 using Blazored.LocalStorage;
 using StaticBlaze.Constants;
@@ -10,32 +11,28 @@ namespace StaticBlaze.Services;
 public class GithubService : IGithubService
 {
     private readonly HttpClient _httpClient;
-    private readonly ILocalStorageService LocalStorage;
+    private readonly ILocalStorageService _localStorage;
 
     public GithubService(HttpClient httpClient, ILocalStorageService localStorage)
     {
         _httpClient = httpClient;
-        LocalStorage = localStorage;
-        _httpClient = httpClient;
-        _httpClient.DefaultRequestHeaders.Add("Authorization", $"Bearer {LocalStorage.GetItemAsStringAsync("GitHubToken")}");
-        _httpClient.DefaultRequestHeaders.Add("User-Agent", "StaticBlaze");
+        _localStorage = localStorage;
     }
 
-    public async Task<bool> ProcessMarkDown(BlogPost metaPost, string message,string fileName)
+    public async Task<bool> ProcessMarkDown(BlogPost metaPost, string message, string fileName)
     {
         var content = metaPost.GenerateMarkdownWithMetadata();
         if (!await UploadMarkDown(content, message, fileName)) return false;
-        
+
         var htmlContent = MarkdownHelper.ToHtml(content);
         return await UploadMarkdownHtmlPage(htmlContent, message, fileName);
-
     }
 
-    private async Task<bool> UploadMarkDown(string content, string message,string fileName)
+    private async Task<bool> UploadMarkDown(string content, string message, string fileName)
     {
-        var ghPAT = await LocalStorage.GetItemAsStringAsync("GitHubToken");
+        var ghPAT = await _localStorage.GetItemAsStringAsync("GitHubToken");
         if (string.IsNullOrEmpty(ghPAT)) return false;
-        
+
         var githubApiUrl = $"https://api.github.com/repos/{GithubConfig.Owner}/{GithubConfig.Repo}/contents/{StaticBlazeConfig.ProjectName}{StaticBlazeConfig.BlogDocs}/{fileName}.md";
 
         var request = new HttpRequestMessage(HttpMethod.Put, githubApiUrl)
@@ -47,18 +44,19 @@ public class GithubService : IGithubService
                 branch = GithubConfig.Branch
             })
         };
+
+        request.Headers.Authorization = new AuthenticationHeaderValue("token", ghPAT);
         request.Headers.UserAgent.ParseAdd("StaticBlazeWASM");
-        request.Headers.Authorization = new AuthenticationHeaderValue("token",ghPAT);
 
         var response = await _httpClient.SendAsync(request);
         return response.IsSuccessStatusCode;
     }
-    
-    private async Task<bool> UploadMarkdownHtmlPage(string content, string message,string fileName)
+
+    private async Task<bool> UploadMarkdownHtmlPage(string content, string message, string fileName)
     {
-        var ghPAT = await LocalStorage.GetItemAsStringAsync("GitHubToken");
+        var ghPAT = await _localStorage.GetItemAsStringAsync("GitHubToken");
         if (string.IsNullOrEmpty(ghPAT)) return false;
-        
+
         var githubApiUrl = $"https://api.github.com/repos/{GithubConfig.Owner}/{GithubConfig.Repo}/contents/{StaticBlazeConfig.ProjectName}{StaticBlazeConfig.BlogPosts}/{fileName}.html";
 
         var request = new HttpRequestMessage(HttpMethod.Put, githubApiUrl)
@@ -70,19 +68,20 @@ public class GithubService : IGithubService
                 branch = GithubConfig.Branch
             })
         };
+
+        request.Headers.Authorization = new AuthenticationHeaderValue("token", ghPAT);
         request.Headers.UserAgent.ParseAdd("StaticBlazeWASM");
-        request.Headers.Authorization = new AuthenticationHeaderValue("token",ghPAT);
 
         var response = await _httpClient.SendAsync(request);
         return response.IsSuccessStatusCode;
     }
-    
+
     public async Task<string> UploadImageToGitHub(byte[] imageBytes, string fileName)
     {
-        var ghPAT = await LocalStorage.GetItemAsStringAsync("GitHubToken");
+        var ghPAT = await _localStorage.GetItemAsStringAsync("GitHubToken");
         if (string.IsNullOrEmpty(ghPAT)) return null;
-        
-        var path = $"{StaticBlazeConfig.ProjectName}{StaticBlazeConfig.BlogAssets}/{fileName}"; // Path inside the repository
+
+        var path = $"{StaticBlazeConfig.ProjectName}{StaticBlazeConfig.BlogAssets}/{fileName}";
         var githubApiUrl = $"https://api.github.com/repos/{GithubConfig.Owner}/{GithubConfig.Repo}/contents/{path}";
 
         var content = new
@@ -96,20 +95,25 @@ public class GithubService : IGithubService
         {
             Content = JsonContent.Create(content)
         };
-        request.Headers.UserAgent.ParseAdd("StaticBlazeWASM");
+
         request.Headers.Authorization = new AuthenticationHeaderValue("token", ghPAT);
+        request.Headers.UserAgent.ParseAdd("StaticBlazeWASM");
 
         var response = await _httpClient.SendAsync(request);
         if (!response.IsSuccessStatusCode) return string.Empty;
-        
+
         var responseData = await response.Content.ReadFromJsonAsync<GitHubUploadResponse>();
         return responseData?.DownloadUrl?.DownloadUrl ?? string.Empty;
     }
-    
+
     public async Task<int> GetTotalPosts()
     {
-        _httpClient.DefaultRequestHeaders.Add("Authorization", $"Token {LocalStorage.GetItemAsStringAsync("GitHubToken")}");
-        _httpClient.DefaultRequestHeaders.Add("User-Agent", "StaticBlaze");
+        var ghPAT = await _localStorage.GetItemAsStringAsync("GitHubToken");
+        if (string.IsNullOrEmpty(ghPAT)) return 0;
+
+        _httpClient.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Token", ghPAT);
+        _httpClient.DefaultRequestHeaders.UserAgent.ParseAdd("StaticBlaze");
+
         var response = await _httpClient.GetAsync($"https://api.github.com/repos/{GithubConfig.Owner}/{GithubConfig.Repo}/{StaticBlazeConfig.ProjectName}{StaticBlazeConfig.BlogAssets}");
         var files = await response.Content.ReadFromJsonAsync<List<GitHubContentFileName>>();
         return files?.Count ?? 0;
@@ -117,8 +121,12 @@ public class GithubService : IGithubService
 
     public async Task<DateTime?> GetLastCommitDate()
     {
-        _httpClient.DefaultRequestHeaders.Add("Authorization", $"Bearer {LocalStorage.GetItemAsStringAsync("GitHubToken")}");
-        _httpClient.DefaultRequestHeaders.Add("User-Agent", "StaticBlaze");
+        var ghPAT = await _localStorage.GetItemAsStringAsync("GitHubToken");
+        if (string.IsNullOrEmpty(ghPAT)) return null;
+
+        _httpClient.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Bearer", ghPAT);
+        _httpClient.DefaultRequestHeaders.UserAgent.ParseAdd("StaticBlaze");
+
         var response = await _httpClient.GetAsync($"https://api.github.com/repos/{GithubConfig.Owner}/{GithubConfig.Repo}/commits?path=_posts&per_page=1");
         var commits = await response.Content.ReadFromJsonAsync<List<GitHubCommit>>();
         return commits?.FirstOrDefault()?.commit.author.date;
