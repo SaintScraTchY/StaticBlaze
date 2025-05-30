@@ -16,7 +16,7 @@ jobs:
         with:
           dotnet-version: 9.x
 
-      - name: 🧰 Install .NET WASM Build Tools
+      - name: � Install .NET WASM Build Tools
         run: dotnet workload install wasm-tools
 
       - name: 💾 Setup Node.js (for TailwindCSS)
@@ -49,11 +49,16 @@ jobs:
       - name: 🌿 Create GithubPage branch if needed
         if: steps.check-branch.outputs.branch_exists == 'false'
         run: |
+          git config --global user.email "51853890+SaintScraTchY@users.noreply.github.com"
+          git config --global user.name "SaintScraTchY"
           git checkout --orphan GithubPage
-          git rm -rf .
-          echo "# Github Pages Branch" > README.md
-          git add README.md
-          git commit -m "Initial commit for GithubPage branch"
+          # Remove all files except published/wwwroot
+          find . -path ./published -prune -o -path ./.git -prune -o -exec rm -rf {} + 2> /dev/null || true
+          # Move published/wwwroot contents to root
+          mv published/wwwroot/* .
+          rm -rf published
+          git add .
+          git commit -m "Initial GithubPage branch"
           git push origin GithubPage
 
       - name: 🚀 Deploy to GitHub Pages
