@@ -10,13 +10,15 @@ jobs:
     steps:
       - name: 🛠️ Checkout Repository
         uses: actions/checkout@v4
+        with:
+          token: ${{ secrets.GHPAT || github.token }}
 
       - name: ⚙️ Setup .NET 9 SDK
         uses: actions/setup-dotnet@v4
         with:
           dotnet-version: 9.x
 
-      - name: � Install .NET WASM Build Tools
+      - name: 🧰 Install .NET WASM Build Tools
         run: dotnet workload install wasm-tools
 
       - name: 💾 Setup Node.js (for TailwindCSS)
@@ -49,8 +51,8 @@ jobs:
       - name: 🌿 Create GithubPage branch if needed
         if: steps.check-branch.outputs.branch_exists == 'false'
         run: |
-          git config --global user.email "51853890+SaintScraTchY@users.noreply.github.com"
-          git config --global user.name "SaintScraTchY"
+          git config --global user.email "actions@github.com"
+          git config --global user.name "GitHub Actions"
           git checkout --orphan GithubPage
           # Remove all files except published/wwwroot
           find . -path ./published -prune -o -path ./.git -prune -o -exec rm -rf {} + 2> /dev/null || true
@@ -59,11 +61,11 @@ jobs:
           rm -rf published
           git add .
           git commit -m "Initial GithubPage branch"
-          git push origin GithubPage
+          git push https://x-access-token:${{ secrets.GHPAT || github.token }}@github.com/${{ github.repository }}.git GithubPage
 
       - name: 🚀 Deploy to GitHub Pages
         uses: JamesIves/github-pages-deploy-action@v4
         with:
-          token: ${{ secrets.GHPAT }}
+          token: ${{ secrets.GHPAT || github.token }}
           folder: published/wwwroot
           branch: GithubPage
