@@ -1,0 +1,57 @@
+name: 🚀 Deploy to GitHub Pages
+
+on:
+  push:
+    branches: [main]
+
+jobs:
+  deploy:
+    runs-on: ubuntu-latest
+    steps:
+      - name: 🛠️ Checkout Repository
+        uses: actions/checkout@v4
+
+      - name: ⚙️ Setup .NET 9 SDK
+        uses: actions/setup-dotnet@v4
+        with:
+          dotnet-version: 9.x
+
+      - name: 🧰 Install .NET WASM Build Tools
+        run: dotnet workload install wasm-tools
+
+      - name: 💾 Setup Node.js (for TailwindCSS)
+        uses: actions/setup-node@v4
+        with:
+          node-version: 20
+
+      - name: 📥 Install TailwindCSS and plugins
+        working-directory: StaticBlaze
+        run: npm ci
+
+      - name: 📦 Restore .NET Dependencies
+        run: dotnet restore ./StaticBlaze/StaticBlaze.csproj
+
+      - name: 🏗️ Build Blazor Project
+        run: dotnet publish ./StaticBlaze/StaticBlaze.csproj -c Release -p:GHPages=true -o published --no-restore
+
+      - name: 📄 Add .nojekyll File
+        run: touch published/wwwroot/.nojekyll
+
+      - name: 📂 Ensure gh-pages branch exists
+        run: |
+          if ! git ls-remote --exit-code --heads origin gh-pages; then
+            echo "gh-pages branch does not exist. Creating an empty orphan branch..."
+            git fetch origin
+            git checkout --orphan gh-pages
+            git reset --hard
+            git commit --allow-empty -m "Initialize gh-pages branch"
+            git push origin gh-pages
+            git checkout main
+          fi
+
+      - name: 🚀 Deploy to GitHub Pages
+        uses: JamesIves/github-pages-deploy-action@v4
+        with:
+          token: ${{ secrets.GHPAT }}
+          folder: published/wwwroot
+          branch: gh-pages
