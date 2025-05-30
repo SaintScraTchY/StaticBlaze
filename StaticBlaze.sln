@@ -1,6 +1,6 @@
 ﻿
 Microsoft Visual Studio Solution File, Format Version 12.00
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "StaticBlazeWASM", "StaticBlazeWASM\StaticBlazeWASM.csproj", "{8A205BEF-4A14-4DF3-9915-F5963011F10B}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "StaticBlaze", "StaticBlaze\StaticBlaze.csproj", "{8A205BEF-4A14-4DF3-9915-F5963011F10B}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
