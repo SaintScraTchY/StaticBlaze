@@ -37,39 +37,28 @@ jobs:
       - name: 📄 Add .nojekyll File
         run: touch published/wwwroot/.nojekyll
 
-      - name: 📂 Ensure gh-pages branch exists
-        env:
-          REPO: ${{ github.repository }}
-          TOKEN: ${{ secrets.GHPAT }}
+      - name: 🔍 Check if GithubPage branch exists
+        id: check-branch
         run: |
-          echo "testing 1"
-          echo ${{ secrets.GITHUB_TOKEN }}
-          echo ${{ secrets.GHPAT }} 
-          echo "testing 2"
-          if ! git ls-remote --exit-code --heads origin gh-pages; then
-            echo "gh-pages branch does not exist. Creating an empty orphan branch..."
-            git fetch origin
-            git checkout --orphan gh-pages
-            git reset --hard
-            
-            # ✅ Configure author identity
-            git config user.name "SaintScraTchY"
-            git config user.email "mehrshad2028@gmail.com"
-      
-            git commit --allow-empty -m "Initialize gh-pages branch"
-      
-            # ✅ Add authenticated remote
-            git remote set-url origin https://x-access-token:${TOKEN}@github.com/${REPO}.git
-      
-            git push origin gh-pages
-            git checkout main
+          if git ls-remote --heads origin refs/heads/GithubPage | grep -q 'GithubPage'; then
+            echo "branch_exists=true" >> $GITHUB_OUTPUT
           else
-            echo "gh-pages branch already exists."
+            echo "branch_exists=false" >> $GITHUB_OUTPUT
           fi
+
+      - name: 🌿 Create GithubPage branch if needed
+        if: steps.check-branch.outputs.branch_exists == 'false'
+        run: |
+          git checkout --orphan GithubPage
+          git rm -rf .
+          echo "# Github Pages Branch" > README.md
+          git add README.md
+          git commit -m "Initial commit for GithubPage branch"
+          git push origin GithubPage
 
       - name: 🚀 Deploy to GitHub Pages
         uses: JamesIves/github-pages-deploy-action@v4
         with:
           token: ${{ secrets.GHPAT }}
           folder: published/wwwroot
-          branch: gh-pages
+          branch: GithubPage
