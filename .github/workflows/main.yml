@@ -34,7 +34,12 @@ jobs:
         run: dotnet restore ./StaticBlaze/StaticBlaze.csproj
 
       - name: 🏗️ Build Blazor Project
-        run: dotnet publish ./StaticBlaze/StaticBlaze.csproj -c Release -p:GHPages=true -o published --no-restore
+        run: |
+          dotnet publish ./StaticBlaze/StaticBlaze.csproj -c Release \
+            -p:BaseHref=/ \
+            -p:BlazorWebAssemblyBasePath=/ \
+            -o published \
+            --no-restore
 
       - name: 📄 Add CNAME and .nojekyll
         run: |
