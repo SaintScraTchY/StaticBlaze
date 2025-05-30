@@ -78,3 +78,4 @@ jobs:
           token: ${{ secrets.GHPAT }}
           github_token: ${{ secrets.GHPAT }}
           folder: published/wwwroot
+          clean: true
