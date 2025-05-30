@@ -6,6 +6,7 @@
         <ImplicitUsings>enable</ImplicitUsings>
         <TailwindCssInput>wwwroot/css/dist.css</TailwindCssInput>
         <TailwindCssOutput>wwwroot/css/dist.out.css</TailwindCssOutput>
+            <BlazorEnableCompression>true</BlazorEnableCompression>
     </PropertyGroup>
 
     <Target Name="TailwindBuild" BeforeTargets="PreBuildEvent">

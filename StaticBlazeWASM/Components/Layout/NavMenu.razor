@@ -14,19 +14,19 @@
             <!-- Desktop Navigation -->
             <div class="hidden md:flex items-center space-x-8">
                 <NavLink href="/blogs" class="nav-link group">
-                    <span class="relative px-1">
+                    <span class="dark:text-white text-gray-900 relative px-1">
                         Blogs
                         <span class="absolute -bottom-1 left-0 w-0 h-0.5 bg-gradient-to-r from-blue-500 to-purple-600 group-hover:w-full transition-all duration-300"></span>
                     </span>
                 </NavLink>
                 <NavLink href="/about" class="nav-link group">
-                    <span class="relative px-1">
+                    <span class="dark:text-white text-gray-900 relative px-1">
                         About
                         <span class="absolute -bottom-1 left-0 w-0 h-0.5 bg-gradient-to-r from-blue-500 to-purple-600 group-hover:w-full transition-all duration-300"></span>
                     </span>
                 </NavLink>
                 <NavLink href="/contact" class="nav-link group">
-                    <span class="relative px-1">
+                    <span class="dark:text-white text-gray-900 relative px-1">
                         Contact
                         <span class="absolute -bottom-1 left-0 w-0 h-0.5 bg-gradient-to-r from-blue-500 to-purple-600 group-hover:w-full transition-all duration-300"></span>
                     </span>
@@ -56,9 +56,12 @@
                 </a>
 
                 <!-- Mobile Menu Button -->
-                <button @onclick="ToggleMobileMenu" class="md:hidden p-2 rounded-lg hover:bg-gray-100 dark:hover:bg-gray-800 
-                                                         transition-colors duration-300 focus:outline-none">
-                    <svg class="w-6 h-6 text-gray-600 dark:text-gray-300" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                <button @onclick="ToggleMobileMenu"
+                        class="md:hidden p-2.5 rounded-xl hover:bg-gray-100 dark:hover:bg-gray-800 
+               active:scale-95 transform transition-all duration-200 focus:outline-none">
+                    <svg class="w-6 h-6 text-gray-600 dark:text-gray-300 transition-transform duration-300 ease-in-out 
+                @(_isMobileMenuOpen ? "rotate-90" : "rotate-0")"
+                         fill="none" viewBox="0 0 24 24" stroke="currentColor">
                         @if (_isMobileMenuOpen)
                         {
                             <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12" />
@@ -73,11 +76,31 @@
         </div>
 
         <!-- Mobile Menu -->
-        <div class="@(_isMobileMenuOpen ? "max-h-64" : "max-h-0") md:hidden overflow-hidden transition-all duration-300 ease-in-out">
-            <div class="px-2 pt-2 pb-3 space-y-1">
-                <NavLink href="/blogs" class="mobile-nav-link">Blogs</NavLink>
-                <NavLink href="/about" class="mobile-nav-link">About</NavLink>
-                <NavLink href="/contact" class="mobile-nav-link">Contact</NavLink>
+        <div class="@(_isMobileMenuOpen ? "max-h-96 opacity-100" : "max-h-0 opacity-0") 
+            md:hidden overflow-hidden transition-all duration-300 ease-in-out 
+            backdrop-blur-lg bg-white/90 dark:bg-gray-800/90">
+            <div class="px-4 py-3 space-y-2">
+                <NavLink href="/blogs"
+                         class="block w-full px-4 py-3 rounded-xl text-base font-medium
+                       text-gray-700 dark:text-gray-200 hover:text-gray-900 dark:hover:text-white
+                       hover:bg-gray-100 dark:hover:bg-gray-700/50
+                       active:scale-98 transform transition-all duration-200">
+                    Blogs
+                </NavLink>
+                <NavLink href="/about"
+                         class="block w-full px-4 py-3 rounded-xl text-base font-medium
+                       text-gray-700 dark:text-gray-200 hover:text-gray-900 dark:hover:text-white
+                       hover:bg-gray-100 dark:hover:bg-gray-700/50
+                       active:scale-98 transform transition-all duration-200">
+                    About
+                </NavLink>
+                <NavLink href="/contact"
+                         class="block w-full px-4 py-3 rounded-xl text-base font-medium
+                       text-gray-700 dark:text-gray-200 hover:text-gray-900 dark:hover:text-white
+                       hover:bg-gray-100 dark:hover:bg-gray-700/50
+                       active:scale-98 transform transition-all duration-200">
+                    Contact
+                </NavLink>
             </div>
         </div>
     </div>

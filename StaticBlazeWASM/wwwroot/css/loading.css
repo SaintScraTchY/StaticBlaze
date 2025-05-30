@@ -1,0 +1,199 @@
+.loading-container {
+    position: fixed;
+    inset: 0;
+    background-color: #f9fafb;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    z-index: 9999;
+    transition: opacity 0.5s ease-in-out;
+}
+
+.dark .loading-container {
+    background-color: #111827;
+}
+
+.loading-content {
+    position: relative;
+    backdrop-filter: blur(8px);
+    background: rgba(255, 255, 255, 0.3);
+    padding: 2rem;
+    border-radius: 1rem;
+    border: 1px solid rgba(255, 255, 255, 0.2);
+    text-align: center;
+    transform: translateY(0);
+    animation: content-fade-in 0.6s ease-out;
+}
+
+.dark .loading-content {
+    background: rgba(31, 41, 55, 0.3);
+    border-color: rgba(75, 85, 99, 0.2);
+}
+
+.loading-progress-container {
+    width: 100%;
+    max-width: 300px;
+    height: 4px;
+    background: rgba(255, 255, 255, 0.1);
+    border-radius: 2px;
+    margin-top: 1rem;
+    overflow: hidden;
+    position: relative;
+}
+
+.loading-progress-bar {
+    position: absolute;
+    left: 0;
+    top: 0;
+    height: 100%;
+    background: linear-gradient(to right, #3b82f6, #8b5cf6);
+    transition: width 0.3s ease-in-out;
+    border-radius: 2px;
+}
+
+.loading-progress-glow {
+    position: absolute;
+    top: 0;
+    left: 0;
+    height: 100%;
+    width: 100px;
+    background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.3), transparent);
+    animation: progress-glow 1.5s infinite;
+    transform: skewX(-20deg);
+}
+
+.loading-message {
+    margin-top: 1rem;
+    font-size: 0.875rem;
+    color: #6b7280;
+    opacity: 0.8;
+    transition: opacity 0.3s ease;
+}
+
+.dark .loading-message {
+    color: #9ca3af;
+}
+
+.loading-spinner {
+    width: 60px;
+    height: 60px;
+    margin-bottom: 1rem;
+    animation: spin 1.5s linear infinite;
+    background: linear-gradient(to right, #3b82f6, #8b5cf6);
+    border-radius: 50%;
+    filter: blur(1px);
+    position: relative;
+}
+
+.loading-spinner::before {
+    content: '';
+    position: absolute;
+    inset: -4px;
+    background: linear-gradient(to right, #3b82f6, #8b5cf6);
+    border-radius: 50%;
+    animation: pulse 2s ease-out infinite;
+    opacity: 0.5;
+}
+
+.loading-text {
+    color: #1f2937;
+    font-size: 1.125rem;
+    font-weight: 500;
+    background: linear-gradient(to right, #3b82f6, #8b5cf6);
+    -webkit-background-clip: text;
+    background-clip: text;
+    -webkit-text-fill-color: transparent;
+}
+
+.dark .loading-text {
+    color: #f3f4f6;
+}
+
+.loading-progress {
+    display: none;
+}
+
+.loading-background {
+    position: absolute;
+    inset: 0;
+    overflow: hidden;
+    z-index: -1;
+    opacity: 0.5;
+}
+
+.loading-blob {
+    position: absolute;
+    width: 150px;
+    height: 150px;
+    border-radius: 50%;
+    filter: blur(30px);
+}
+
+.blob-1 {
+    top: 20%;
+    left: 20%;
+    background: #818cf8;
+    animation: float1 7s infinite;
+}
+
+.blob-2 {
+    top: 60%;
+    right: 20%;
+    background: #c084fc;
+    animation: float2 8s infinite;
+}
+
+.blob-3 {
+    bottom: 20%;
+    left: 30%;
+    background: #34d399;
+    animation: float3 6s infinite;
+}
+
+@keyframes spin {
+    to { transform: rotate(360deg); }
+}
+
+@keyframes float1 {
+    0%, 100% { transform: translate(0, 0); }
+    50% { transform: translate(20px, -20px); }
+}
+
+@keyframes float2 {
+    0%, 100% { transform: translate(0, 0); }
+    50% { transform: translate(-20px, 20px); }
+}
+
+@keyframes float3 {
+    0%, 100% { transform: translate(0, 0); }
+    50% { transform: translate(15px, -15px); }
+}
+
+@keyframes pulse {
+    0% { transform: scale(1); opacity: 0.5; }
+    50% { transform: scale(1.2); opacity: 0; }
+    100% { transform: scale(1); opacity: 0; }
+}
+
+@keyframes content-fade-in {
+    from {
+        opacity: 0;
+        transform: translateY(20px);
+    }
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+@keyframes progress-glow {
+    0% { transform: translateX(-100%) skewX(-20deg); }
+    100% { transform: translateX(200%) skewX(-20deg); }
+}
+
+/* Hide loading screen when Blazor is ready */
+.blazor-ready .loading-container {
+    opacity: 0;
+    pointer-events: none;
+}
