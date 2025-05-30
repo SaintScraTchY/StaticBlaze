@@ -39,7 +39,8 @@ jobs:
 
       - name: 📂 Ensure gh-pages branch exists
         env:
-          GITHUB_TOKEN: ${{ secrets.GHPAT }}
+          REPO: ${{ github.repository }}
+          TOKEN: ${{ secrets.GHPAT }}
         run: |
           if ! git ls-remote --exit-code --heads origin gh-pages; then
             echo "gh-pages branch does not exist. Creating an empty orphan branch..."
@@ -52,8 +53,14 @@ jobs:
             git config user.email "mehrshad2028@gmail.com"
       
             git commit --allow-empty -m "Initialize gh-pages branch"
-            git push https://x-access-token:${{ secrets.GHPAT }}@github.com/${{ github.repository }} gh-pages
+      
+            # ✅ Add authenticated remote
+            git remote set-url origin https://x-access-token:${TOKEN}@github.com/${REPO}.git
+      
+            git push origin gh-pages
             git checkout main
+          else
+            echo "gh-pages branch already exists."
           fi
 
       - name: 🚀 Deploy to GitHub Pages
