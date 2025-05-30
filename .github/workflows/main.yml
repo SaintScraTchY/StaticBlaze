@@ -36,9 +36,10 @@ jobs:
       - name: 🏗️ Build Blazor Project
         run: dotnet publish ./StaticBlaze/StaticBlaze.csproj -c Release -p:GHPages=true -o published --no-restore
 
-      - name: 📄 Add .nojekyll File
+      - name: 📄 Add CNAME and .nojekyll
         run: |
           mkdir -p published/wwwroot
+          echo "mehrshad.is-a.dev" > published/wwwroot/CNAME
           touch published/wwwroot/.nojekyll
 
       - name: 🔍 Verify Build Output
