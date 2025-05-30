@@ -78,6 +78,22 @@ jobs:
           git commit -m "Initial GithubPage branch"
           git push https://x-access-token:${{ secrets.GHPAT || github.token }}@github.com/${{ github.repository }}.git GithubPage
 
+      - name: 📄 Prepare Deployment
+        run: |
+          # Move wwwroot contents to root
+          mv published/wwwroot/* published/
+          
+          # Ensure _framework directory is properly handled
+          mkdir -p published/_framework
+          cp -r published/wwwroot/_framework/* published/_framework/ || true
+          
+          # Add necessary files
+          echo "mehrshad.is-a.dev" > published/CNAME
+          touch published/.nojekyll
+          
+          # Fix permissions
+          chmod -R 755 published/_framework
+
       - name: 🚀 Deploy to GitHub Pages
         uses: JamesIves/github-pages-deploy-action@v4
         with:
@@ -86,3 +102,7 @@ jobs:
           github_token: ${{ secrets.GHPAT }}
           folder: published/wwwroot
           clean: true
+          clean-exclude: |
+            .git
+            CNAME
+            .nojekyll
