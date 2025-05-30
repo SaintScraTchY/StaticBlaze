@@ -38,14 +38,21 @@ jobs:
         run: touch published/wwwroot/.nojekyll
 
       - name: 📂 Ensure gh-pages branch exists
+        env:
+          GITHUB_TOKEN: ${{ secrets.GHPAT }}
         run: |
           if ! git ls-remote --exit-code --heads origin gh-pages; then
             echo "gh-pages branch does not exist. Creating an empty orphan branch..."
             git fetch origin
             git checkout --orphan gh-pages
             git reset --hard
+            
+            # ✅ Configure author identity
+            git config user.name "SaintScraTchY"
+            git config user.email "mehrshad2028@gmail.com"
+      
             git commit --allow-empty -m "Initialize gh-pages branch"
-            git push origin gh-pages
+            git push https://x-access-token:${GITHUB_TOKEN}@github.com/${{ github.repository }} gh-pages
             git checkout main
           fi
 
