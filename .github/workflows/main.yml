@@ -52,7 +52,7 @@ jobs:
             git config user.email "mehrshad2028@gmail.com"
       
             git commit --allow-empty -m "Initialize gh-pages branch"
-            git push https://x-access-token:${GITHUB_TOKEN}@github.com/${{ github.repository }} gh-pages
+            git push https://x-access-token:${{ secrets.GHPAT }}@github.com/${{ github.repository }} gh-pages
             git checkout main
           fi
 
