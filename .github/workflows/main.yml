@@ -83,6 +83,7 @@ jobs:
           # Add necessary files
           echo "mehrshad.is-a.dev" > published/CNAME
           touch .nojekyll
+          cp index.html 404.html
 
       - name: 🚀 Deploy to GitHub Pages
         uses: JamesIves/github-pages-deploy-action@v4
