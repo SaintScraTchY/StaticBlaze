@@ -19,7 +19,15 @@ jobs:
       - name: 🧰 Install .NET WASM Build Tools
         run: dotnet workload install wasm-tools
 
-      - name: 📦 Restore Dependencies
+      - name: 💾 Setup Node.js (for TailwindCSS)
+        uses: actions/setup-node@v4
+        with:
+          node-version: 20
+
+      - name: 📥 Install TailwindCSS and plugins
+        run: npm ci
+
+      - name: 📦 Restore .NET Dependencies
         run: dotnet restore ./StaticBlaze/StaticBlaze.csproj
 
       - name: 🏗️ Build Blazor Project
