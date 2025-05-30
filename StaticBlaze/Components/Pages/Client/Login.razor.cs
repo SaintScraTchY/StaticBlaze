@@ -2,7 +2,6 @@
 using System.Text.Json;
 using Blazored.LocalStorage;
 using Microsoft.AspNetCore.Components;
-using Microsoft.AspNetCore.Http;
 using StaticBlaze.Constants;
 using StaticBlaze.Models;
 
@@ -24,17 +23,16 @@ public partial class Login : ComponentBase
     {
         if (string.IsNullOrEmpty(GitHubToken)) return;
 
-        // Call GitHub API to validate token
         var (isValid, username) = await VerifyGitHubToken(GitHubToken);
-        if (isValid && username == GithubConfig.Owner) // Optionally verify username
+        if (isValid && username == GithubConfig.Owner)
         {
-            var options = new CookieOptions { Expires = DateTime.UtcNow.AddDays(1), HttpOnly = true, Secure = true };
-            await _localStorage.SetItemAsStringAsync("GitHubToken", GitHubToken);
+            await _localStorage.SetItemAsync("GitHubToken", GitHubToken);
             _navigation.NavigateTo("/admin/dashboard");
         }
         else
         {
             // Handle invalid token
+            GitHubToken = string.Empty;
         }
     }
     
@@ -46,14 +44,12 @@ public partial class Login : ComponentBase
 
         try
         {
-            // Step 1: Get user info
             var userResponse = await client.GetAsync("https://api.github.com/user");
             if (!userResponse.IsSuccessStatusCode) return (false, null);
 
             var userJson = await userResponse.Content.ReadAsStringAsync();
             var user = JsonSerializer.Deserialize<GitHubUser>(userJson, new JsonSerializerOptions { PropertyNameCaseInsensitive = true });
         
-            // Step 2: Check if token has access to a specific repo (replace these)
             var repoCheck = await client.GetAsync($"https://api.github.com/repos/{GithubConfig.Owner}/{GithubConfig.Owner}");
             if (!repoCheck.IsSuccessStatusCode) return (false, null);
 
