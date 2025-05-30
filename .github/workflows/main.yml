@@ -35,7 +35,6 @@ jobs:
 
       - name: 🏗️ Build Blazor Project
         run: dotnet publish ./StaticBlaze/StaticBlaze.csproj -c Release -p:GHPages=true -o published --no-restore
-         ls -la published/wwwroot  # Debug output
 
       - name: 📄 Add .nojekyll File
         run: |
@@ -77,5 +76,4 @@ jobs:
         uses: JamesIves/github-pages-deploy-action@v4
         with:
           token: ${{ secrets.GHPAT || github.token }}
-          folder: published/wwwroot
           branch: GithubPage
