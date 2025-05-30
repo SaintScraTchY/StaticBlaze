@@ -42,6 +42,10 @@ jobs:
           REPO: ${{ github.repository }}
           TOKEN: ${{ secrets.GHPAT }}
         run: |
+          echo "testing 1"
+          echo ${{ secrets.GITHUB_TOKEN }}
+          echo ${{ secrets.GHPAT }} 
+          echo "testing 2"
           if ! git ls-remote --exit-code --heads origin gh-pages; then
             echo "gh-pages branch does not exist. Creating an empty orphan branch..."
             git fetch origin
