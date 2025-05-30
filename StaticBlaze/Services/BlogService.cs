@@ -1,6 +1,4 @@
-﻿using System.Net.Http.Json;
-using Microsoft.AspNetCore.Components;
-using StaticBlaze.Constants;
+﻿using StaticBlaze.Constants;
 using StaticBlaze.Models;
 using StaticBlaze.Utilities.MarkdownParser;
 

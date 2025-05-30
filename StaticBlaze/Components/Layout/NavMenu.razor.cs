@@ -1,6 +1,8 @@
-﻿using Blazored.LocalStorage;
+﻿using System.Threading.Tasks;
+using Blazored.LocalStorage;
 using Microsoft.AspNetCore.Components;
 using Microsoft.JSInterop;
+using Radix.Math.Applied.Optimization.Control;
 
 namespace StaticBlaze.Components.Layout;
 
@@ -24,7 +26,7 @@ public partial class NavMenu : ComponentBase
     {
         _isMobileMenuOpen = !_isMobileMenuOpen;
     }
-
+    
     protected override async Task OnInitializedAsync()
     {
         if (!(await LocalStorage.ContainKeyAsync("theme")))

@@ -1,3 +1,4 @@
+
 namespace StaticBlaze.Models;
 
 public class ActivityLog
