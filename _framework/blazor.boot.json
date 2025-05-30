@@ -1,7 +1,7 @@
 {
   "mainAssemblyName": "StaticBlaze",
   "resources": {
-    "hash": "sha256-Gsz1FiZ2ad8S0/lbPOivFE/kiRX9TDMw7EM3zh3cmFY=",
+    "hash": "sha256-6EdSoeWlqxPOb+IPl/d2pa59Jk/Ui63coAVHLcVo+OU=",
     "fingerprinting": {
       "BlazorComponentUtilities.p9kxg9c327.wasm": "BlazorComponentUtilities.wasm",
       "Blazored.LocalStorage.12n6dz54qr.wasm": "Blazored.LocalStorage.wasm",
@@ -75,7 +75,7 @@
       "System.ezrw3d5kw2.wasm": "System.wasm",
       "netstandard.7iwom0q93r.wasm": "netstandard.wasm",
       "System.Private.CoreLib.rmzmeqc94s.wasm": "System.Private.CoreLib.wasm",
-      "StaticBlaze.d90unp89ee.wasm": "StaticBlaze.wasm",
+      "StaticBlaze.1kqvdjnc0h.wasm": "StaticBlaze.wasm",
       "dotnet.native.w2rpj55hda.js": "dotnet.native.js",
       "dotnet.native.7391mggr6p.wasm": "dotnet.native.wasm",
       "dotnet.js": "dotnet.js",
@@ -173,7 +173,7 @@
       "System.Threading.3twfkmfokt.wasm": "sha256-KRBqxgU9Zh2j0cHE1zIDpLlm7TKMP9QacmuY6myYt84=",
       "System.ezrw3d5kw2.wasm": "sha256-ViNRvhyxlTugIlqJHamw/HwbXlg/YWcrANmxuTM0tfg=",
       "netstandard.7iwom0q93r.wasm": "sha256-cY+jWBcG7p7cRCzDYPALyCRYfu7bFnpURzpHXCOe/0I=",
-      "StaticBlaze.d90unp89ee.wasm": "sha256-L2jUX8Ow31za2IITi/unnQjeL6dAyJqNmaIdvA2Gq1g="
+      "StaticBlaze.1kqvdjnc0h.wasm": "sha256-MWHXmyxqWZUSf5MXIk8uthq0X+ouhz4eFSUMI4lPqH0="
     }
   },
   "cacheBootResources": true,
