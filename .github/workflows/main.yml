@@ -75,5 +75,6 @@ jobs:
       - name: 🚀 Deploy to GitHub Pages
         uses: JamesIves/github-pages-deploy-action@v4
         with:
-          token: ${{ secrets.GHPAT || github.token }}
-          branch: GithubPage
+          token: ${{ secrets.GHPAT }}
+          github_token: ${{ secrets.GHPAT }}
+          folder: published/wwwroot
