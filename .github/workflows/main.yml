@@ -25,6 +25,7 @@ jobs:
           node-version: 20
 
       - name: 📥 Install TailwindCSS and plugins
+        working-directory: StaticBlaze
         run: npm ci
 
       - name: 📦 Restore .NET Dependencies
