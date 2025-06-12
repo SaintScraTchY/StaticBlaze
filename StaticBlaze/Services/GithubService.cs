@@ -48,7 +48,7 @@ public class GithubService : IGithubService
         };
 
         request.Headers.Authorization = new AuthenticationHeaderValue("token", ghPAT);
-        request.Headers.UserAgent.ParseAdd("StaticBlazeWASM");
+        request.Headers.UserAgent.ParseAdd("StaticBlaze");
 
         var response = await _httpClient.SendAsync(request);
         return response.IsSuccessStatusCode;
@@ -72,7 +72,7 @@ public class GithubService : IGithubService
         };
 
         request.Headers.Authorization = new AuthenticationHeaderValue("token", ghPAT);
-        request.Headers.UserAgent.ParseAdd("StaticBlazeWASM");
+        request.Headers.UserAgent.ParseAdd("StaticBlaze");
 
         var response = await _httpClient.SendAsync(request);
         return response.IsSuccessStatusCode;
@@ -99,7 +99,7 @@ public class GithubService : IGithubService
         };
 
         request.Headers.Authorization = new AuthenticationHeaderValue("token", ghPAT);
-        request.Headers.UserAgent.ParseAdd("StaticBlazeWASM");
+        request.Headers.UserAgent.ParseAdd("StaticBlaze");
 
         var response = await _httpClient.SendAsync(request);
         if (!response.IsSuccessStatusCode) return string.Empty;
@@ -113,10 +113,12 @@ public class GithubService : IGithubService
         var ghPAT = await _localStorage.GetItemAsStringAsync("GitHubToken");
         if (string.IsNullOrEmpty(ghPAT)) return 0;
 
-        _httpClient.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Token", ghPAT);
+        _httpClient.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("token", ghPAT);
         _httpClient.DefaultRequestHeaders.UserAgent.ParseAdd("StaticBlaze");
 
-        var response = await _httpClient.GetAsync($"https://api.github.com/repos/{GithubConfig.Owner}/{GithubConfig.Repo}/{StaticBlazeConfig.ProjectName}{StaticBlazeConfig.BlogAssets}");
+        var githubApiUrl = $"https://api.github.com/repos/{GithubConfig.Owner}/{GithubConfig.Repo}/contents/{StaticBlazeConfig.ProjectName}{StaticBlazeConfig.BlogDocs}?ref={GithubConfig.Branch}";
+        Console.WriteLine(githubApiUrl);
+        var response = await _httpClient.GetAsync(githubApiUrl);
         var files = await response.Content.ReadFromJsonAsync<List<GitHubContentFileName>>();
         return files?.Count ?? 0;
     }

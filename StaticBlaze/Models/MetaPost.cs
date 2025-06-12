@@ -6,7 +6,6 @@ public class MetaPost
 {
     public Guid Guid { get; init; }
     [Required(ErrorMessage = "Slug is required")]
-    [RegularExpression(@"^[a-z0-9-]+$", ErrorMessage = "Only lowercase letters, numbers, and hyphens")]
     public string Slug { get; set; }
 
     [Required]

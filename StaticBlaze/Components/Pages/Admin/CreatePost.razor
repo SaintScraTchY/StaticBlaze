@@ -38,13 +38,13 @@
             <div class="space-y-2">
                 <label class="block text-sm font-medium text-gray-700">Slug (URL-friendly)</label>
                 <InputText @bind-Value="BlogPost.Slug" class="w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-blue-500 focus:border-blue-500" />
-                <ValidationMessage For="@(() => BlogPost.Slug)" class="text-sm text-red-600" />
+                <ValidationMessage For="@(() => BlogPost.Slug)" @oninput="OnTitleChanged" class="text-sm text-red-600" />
             </div>
 
             <!-- Title -->
             <div class="space-y-2">
                 <label class="block text-sm font-medium text-gray-700">Title</label>
-                <InputText @bind-Value="BlogPost.Title" class="w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-blue-500 focus:border-blue-500" />
+                <InputText @bind-Value="BlogPost.Title" @oninput="OnTitleChanged" class="w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-blue-500 focus:border-blue-500" />
             </div>
 
             <!-- Short Description -->
@@ -102,5 +102,5 @@
 </div>
 
 @code {
-   
+  
 }

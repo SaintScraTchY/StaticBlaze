@@ -1,5 +1,6 @@
 ﻿using System.Security.Cryptography;
 using System.Text.RegularExpressions;
+using System.Text;
 using HeyRed.Mime;
 using Microsoft.AspNetCore.Components;
 using Microsoft.AspNetCore.Components.Forms;
@@ -48,9 +49,40 @@ public partial class CreatePost : ComponentBase
         BlogPost.Thumbnail = ThumbnailPreviewUrl;
     }
 
+    private void OnTitleChanged(ChangeEventArgs e)
+    {
+        if (e.Value is not string title) return;
+        BlogPost.Slug = GenerateSlug(title);
+        StateHasChanged();
+    }
+
+    private static string GenerateSlug(string input)
+    {
+        // Convert to lowercase
+        input = input.ToLowerInvariant();
+
+        // Replace spaces with hyphens
+        input = input.Replace(" ", "-");
+
+        // Remove all invalid characters
+        var sb = new StringBuilder();
+        foreach (var c in input.Where(c => c is >= 'a' and <= 'z' or >= '0' and <= '9' or '-'))
+        {
+            sb.Append(c);
+        }
+
+        // Remove duplicate hyphens
+        input = duplicateHyphens().Replace(sb.ToString(), "-");
+
+        // Remove leading/trailing hyphens
+        return input.Trim('-');
+    }
 
     private async Task HandleSubmit()
     {
+        // Ensure slug is properly formatted before submission
+        BlogPost.Slug = GenerateSlug(BlogPost.Slug);
+
         var imageUrls = ExtractImageUrlsByString(BlogPost.Thumbnail);
         
         if(imageUrls == null || imageUrls.Count == 0)
@@ -145,4 +177,6 @@ public partial class CreatePost : ComponentBase
     
     [GeneratedRegex(StaticBlazeConfig.Base64ImagePattern)]
     private static partial Regex Bas64ImageExtractorRegex();
+    [GeneratedRegex(@"-+")]
+    private static partial Regex duplicateHyphens();
 }

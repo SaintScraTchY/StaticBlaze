@@ -12,7 +12,7 @@ public partial class Login : ComponentBase
 {
     private readonly NavigationManager _navigation;
     private readonly ILocalStorageService _localStorage;
-    private string GitHubToken;
+    private string _gitHubToken;
 
     public Login(NavigationManager navigation, ILocalStorageService localStorage)
     {
@@ -22,18 +22,18 @@ public partial class Login : ComponentBase
 
     private async Task HandleLogin()
     {
-        if (string.IsNullOrEmpty(GitHubToken)) return;
+        if (string.IsNullOrEmpty(_gitHubToken)) return;
 
-        var (isValid, username) = await VerifyGitHubToken(GitHubToken);
+        var (isValid, username) = await VerifyGitHubToken(_gitHubToken);
         if (isValid && username == GithubConfig.Owner)
         {
-            await _localStorage.SetItemAsync("GitHubToken", GitHubToken);
+            await _localStorage.SetItemAsStringAsync("GitHubToken", _gitHubToken);
             _navigation.NavigateTo("/admin/dashboard");
         }
         else
         {
             // Handle invalid token
-            GitHubToken = string.Empty;
+            _gitHubToken = string.Empty;
         }
     }
     
