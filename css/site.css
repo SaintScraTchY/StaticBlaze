@@ -8,3 +8,62 @@
 .nav-text {
     transition: opacity 150ms ease-in-out, transform 150ms ease-in-out;
 }
+
+/* Add to your styles.css or equivalent */
+.prose pre {
+    @apply bg-gray-900 text-white p-4 rounded-lg overflow-x-auto;
+}
+.prose code {
+    @apply bg-gray-800 text-pink-400 rounded px-1;
+}
+
+/* In your stylesheet or inline with Tailwind v4 */
+.prose img {
+    @apply mx-auto my-6 max-w-full rounded-lg shadow-md;
+}
+
+.markdown-content img {
+    display: block;
+    margin: 1.5rem auto;
+    max-width: 100%;
+    border-radius: 0.5rem;
+    box-shadow: 0 4px 12px rgba(0,0,0,0.1);
+}
+
+.markdown-content h1, h2, h3 {
+    font-weight: 700;
+    margin-top: 1.5rem;
+}
+
+.markdown-content pre {
+    background-color: #111827;
+    color: #d1d5db;
+    padding: 1rem;
+    border-radius: 0.5rem;
+    overflow-x: auto;
+}
+
+.markdown-content blockquote {
+    border-left: 4px solid #60a5fa;
+    padding-left: 1rem;
+    color: #9ca3af;
+    font-style: italic;
+    margin: 1rem 0;
+}
+
+.markdown-content table {
+    width: 100%;
+    border-collapse: collapse;
+    margin-top: 1rem;
+}
+
+.markdown-content th, td {
+    border: 1px solid #e5e7eb;
+    padding: 0.5rem;
+}
+
+/* Add this to your global styles */
+.toastui-editor-contents.rtl {
+    direction: rtl;
+    text-align: right;
+}
