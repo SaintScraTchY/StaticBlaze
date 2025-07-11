@@ -22,14 +22,17 @@ public class BlogService : IBlogService
     public async Task<BlogPost?> GetPostAsync(string slug)
     {
         var docuri = $"{_navigationManager.BaseUri}{StaticBlazeConfig.BlogDocs}/{slug}.md";
-        var docResponse = _httpClient.GetStringAsync($"{_navigationManager.BaseUri}{StaticBlazeConfig.BlogDocs}/{slug}.md.gz");
-        var postResponse = _httpClient.GetStringAsync($"{_navigationManager.BaseUri}{StaticBlazeConfig.BlogPosts}/{slug}.html.gz");
+        var docResponse = _httpClient.GetStringAsync($"{_navigationManager.BaseUri}{StaticBlazeConfig.BlogDocs}/{slug}.md");
+        var postResponse = _httpClient.GetStringAsync($"{_navigationManager.BaseUri}{StaticBlazeConfig.BlogPosts}/{slug}.html");
         await Task.WhenAll(docResponse, postResponse);
 
         var postSummary = docResponse.Result;
         var postContent = postResponse.Result;
         if (string.IsNullOrEmpty(postSummary) || string.IsNullOrEmpty(postContent))
         {
+            Console.WriteLine($"Post not found: {slug}");
+            Console.WriteLine(string.IsNullOrEmpty(postSummary));
+            Console.WriteLine(string.IsNullOrEmpty(postContent));
             return null;
         }
 
