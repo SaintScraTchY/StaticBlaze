@@ -1,7 +1,7 @@
 {
   "mainAssemblyName": "StaticBlaze",
   "resources": {
-    "hash": "sha256-4yWJv87KSgIy/whLu6VShv18VntSKec4gWMKk9tcuac=",
+    "hash": "sha256-hkcFly92adpJuWjBLVtuq+CGI12yaIfbqOptrtx7Jvs=",
     "fingerprinting": {
       "BlazorComponentUtilities.p9kxg9c327.wasm": "BlazorComponentUtilities.wasm",
       "Blazored.LocalStorage.12n6dz54qr.wasm": "Blazored.LocalStorage.wasm",
@@ -45,7 +45,7 @@
       "System.ComponentModel.Primitives.fut2w6qkev.wasm": "System.ComponentModel.Primitives.wasm",
       "System.ComponentModel.TypeConverter.kob059dmol.wasm": "System.ComponentModel.TypeConverter.wasm",
       "System.ComponentModel.rx2mgdh3t6.wasm": "System.ComponentModel.wasm",
-      "System.Console.qvk6f7e1xn.wasm": "System.Console.wasm",
+      "System.Console.xtjgrnuoms.wasm": "System.Console.wasm",
       "System.Diagnostics.DiagnosticSource.2p4h6car0p.wasm": "System.Diagnostics.DiagnosticSource.wasm",
       "System.Drawing.Primitives.fslu88bftz.wasm": "System.Drawing.Primitives.wasm",
       "System.Drawing.xbwbk1ny24.wasm": "System.Drawing.wasm",
@@ -74,10 +74,10 @@
       "System.Threading.jn6105gyvd.wasm": "System.Threading.wasm",
       "System.wznexm8bk2.wasm": "System.wasm",
       "netstandard.bqv80ssmj5.wasm": "netstandard.wasm",
-      "System.Private.CoreLib.rhrun4c8p8.wasm": "System.Private.CoreLib.wasm",
-      "StaticBlaze.rfz06loxky.wasm": "StaticBlaze.wasm",
+      "System.Private.CoreLib.09xgbhfz3v.wasm": "System.Private.CoreLib.wasm",
+      "StaticBlaze.482n8jr94l.wasm": "StaticBlaze.wasm",
       "dotnet.native.fpn4x653o1.js": "dotnet.native.js",
-      "dotnet.native.gci8mtgcfx.wasm": "dotnet.native.wasm",
+      "dotnet.native.e6sy2av05t.wasm": "dotnet.native.wasm",
       "dotnet.js": "dotnet.js",
       "dotnet.runtime.593bvuk5yc.js": "dotnet.runtime.js",
       "icudt_CJK.tjcz0u77k5.dat": "icudt_CJK.dat",
@@ -91,7 +91,7 @@
       "dotnet.runtime.593bvuk5yc.js": "sha256-x+PnWU47EIr/zL3xxqIUMDJi/dy5904TVGunDqCvjIY="
     },
     "wasmNative": {
-      "dotnet.native.gci8mtgcfx.wasm": "sha256-4HgtyTgphTIicjf4HORXyi/MnsOoc7dwaH9BKGf08QY="
+      "dotnet.native.e6sy2av05t.wasm": "sha256-2qLNjRSzy1KL0IbLakF+AK4gNyvYHMuwrvet8qVc0J0="
     },
     "icu": {
       "icudt_CJK.tjcz0u77k5.dat": "sha256-SZLtQnRc0JkwqHab0VUVP7T3uBPSeYzxzDnpxPpUnHk=",
@@ -100,7 +100,7 @@
     },
     "coreAssembly": {
       "System.Runtime.InteropServices.JavaScript.lnedh9fxsl.wasm": "sha256-cTDlU0sLp3hCmTKUK2AVqrlAjuFjQveVBhCUZiIdUkc=",
-      "System.Private.CoreLib.rhrun4c8p8.wasm": "sha256-r62NufWUHMZmPaAvF+lMmNGR5F8i7dhbEtEQfXJaTIg="
+      "System.Private.CoreLib.09xgbhfz3v.wasm": "sha256-VIuOHwj8ctMJhxmWzw2RRrZZmaM/NV9IYjdBa4k13Y4="
     },
     "assembly": {
       "BlazorComponentUtilities.p9kxg9c327.wasm": "sha256-3TgvS/HUtEk/6K33ycKciSd5J6RBnSq8vEqA5ZhHjj0=",
@@ -145,7 +145,7 @@
       "System.ComponentModel.Primitives.fut2w6qkev.wasm": "sha256-l5tEGStXOOpUEC5ZGtcK7F5gBouBUoyX/4h3pPm6Og0=",
       "System.ComponentModel.TypeConverter.kob059dmol.wasm": "sha256-JHSJSf3mj/xkLwdNLYIkRjXA1gU12XoKUVLV3S2MFD8=",
       "System.ComponentModel.rx2mgdh3t6.wasm": "sha256-oRNsBeQUBdTsEhN5LX4xuvz6N5C/d9El6BaP/LqNcxM=",
-      "System.Console.qvk6f7e1xn.wasm": "sha256-NrodFRMGPMxEK7AuX/WSWGeje+b0i3InAYtXwXtc5D4=",
+      "System.Console.xtjgrnuoms.wasm": "sha256-ZV/kx8KBscl9lVh9dFbido85AVAlmEx8pnvs7yHkh0c=",
       "System.Diagnostics.DiagnosticSource.2p4h6car0p.wasm": "sha256-+veuX8DWoEb0kYxNq0haS8KcLMGlABRM7u0HEWbduyM=",
       "System.Drawing.Primitives.fslu88bftz.wasm": "sha256-z2F8Y7JC9C9FGoEKQnkQTCiXGuwv+cyRk+BBWFqBE0k=",
       "System.Drawing.xbwbk1ny24.wasm": "sha256-baA0Rs5rXFIK81FazI8Nd5eG/F3kAMqJ1LV0bLi45PY=",
@@ -173,7 +173,7 @@
       "System.Threading.jn6105gyvd.wasm": "sha256-EXQRreBZRNntUAqAPXfCua2HzOpgyuiRJi1vC8p3/zI=",
       "System.wznexm8bk2.wasm": "sha256-/Imz/Enqa2AZc4T3k/CqtsM6674KRN9OUtvK4Nokhew=",
       "netstandard.bqv80ssmj5.wasm": "sha256-o4JmFPNy6iVFxqXVN/Hm1fWOnRlZnQQoLs5QWZCl+UE=",
-      "StaticBlaze.rfz06loxky.wasm": "sha256-mVLamgUZY1GKuDF9zavGRxjJEoOVImJcf2q+pKSI7JM="
+      "StaticBlaze.482n8jr94l.wasm": "sha256-/HAZWUWQEIba+mSrX628MnRouIluqyGDA3mxRKlUA6s="
     }
   },
   "cacheBootResources": true,
