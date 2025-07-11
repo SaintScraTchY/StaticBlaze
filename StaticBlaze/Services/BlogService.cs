@@ -19,6 +19,26 @@ public class BlogService : IBlogService
         _analyticsService = analyticsService;
     }
 
+    public async Task<BlogPost?> GetPostAsync(string slug)
+    {
+        var docuri = $"{_navigationManager.BaseUri}{StaticBlazeConfig.BlogDocs}/{slug}.md";
+        var docResponse = _httpClient.GetStringAsync($"{_navigationManager.BaseUri}{StaticBlazeConfig.BlogDocs}/{slug}.md.gz");
+        var postResponse = _httpClient.GetStringAsync($"{_navigationManager.BaseUri}{StaticBlazeConfig.BlogPosts}/{slug}.html.gz");
+        await Task.WhenAll(docResponse, postResponse);
+
+        var postSummary = docResponse.Result;
+        var postContent = postResponse.Result;
+        if (string.IsNullOrEmpty(postSummary) || string.IsNullOrEmpty(postContent))
+        {
+            return null;
+        }
+
+        var post = postSummary.ParseMarkdown();
+        var MdReponse = docResponse.Result.ToHtml();
+        post.Content = MdReponse;
+        return post;
+    }
+    
     public async Task<DashboardStats> GetDashboardStats()
     {
         var currentPosts = await _githubService.GetTotalPosts();
@@ -59,24 +79,6 @@ public class BlogService : IBlogService
         return await response.Content.ReadFromJsonAsync<List<MetaPost>>();
     }
 
-    public async Task<BlogPost?> GetPostAsync(string slug)
-    {
-        var docuri = $"{_navigationManager.BaseUri}{StaticBlazeConfig.BlogDocs}/{slug}.md";
-        var docResponse = _httpClient.GetStringAsync($"{_navigationManager.BaseUri}{StaticBlazeConfig.BlogDocs}/{slug}.md");
-        var postResponse = _httpClient.GetStringAsync($"{_navigationManager.BaseUri}{StaticBlazeConfig.BlogPosts}/{slug}.html");
-        await Task.WhenAll(docResponse, postResponse);
-
-        var postSummary = docResponse.Result;
-        var postContent = postResponse.Result;
-        if (string.IsNullOrEmpty(postSummary) || string.IsNullOrEmpty(postContent))
-        {
-            return null;
-        }
-
-        var post = MarkdownHelper.ParseMarkdown(postSummary);
-        post.Content = postContent;
-        return post;
-    }
 
     public Task<List<MetaPost>> GetRecentPosts(int count)
     {

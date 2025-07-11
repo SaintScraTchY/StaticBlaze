@@ -8,7 +8,7 @@ namespace StaticBlaze.Utilities.MarkdownParser;
 public static partial class MarkdownHelper
 {
     
-    public static BlogPost ParseMarkdown(string markdown)
+    public static BlogPost ParseMarkdown(this string markdown)
     {
         var match = Regex.Match(markdown, @"^---\s*\n(?<meta>.*?)\n---\s*\n(?<body>.*)", RegexOptions.Singleline);
         if (!match.Success) throw new Exception("Invalid frontmatter");
@@ -36,26 +36,37 @@ public static partial class MarkdownHelper
         return blogPost;
     }
     
-    public static string ToHtml(string markdown)
+    public static string ToHtml(this string markdown)
     {
-        
         var pipeline = new MarkdownPipelineBuilder()
-            .UseYamlFrontMatter() // Allow frontmatter metadata parsing
+            .UseYamlFrontMatter()
             .UsePipeTables()
             .UseGridTables()
             .UseEmojiAndSmiley()
             .UseAutoIdentifiers(AutoIdentifierOptions.GitHub)
-            .UseBootstrap() // Adds class attributes for tables, blockquotes, etc.
-            .UseGenericAttributes() // Enable `{.class #id}` support
+            .UseGenericAttributes()
             .UseAdvancedExtensions()
             .Build();
-        
-        // Replace code block with mermaid div
-        var rendered = Markdown.ToHtml(markdown, pipeline);
-        rendered = MyRegex().Replace(rendered, "<div class=\"mermaid\">$1</div>");
 
-        return Markdown.ToHtml(markdown, pipeline);
+        var preprocessed = PreprocessMermaid(markdown);
+        return Markdown.ToHtml(preprocessed, pipeline);
     }
+
+    
+    private static string PreprocessMermaid(string markdown)
+    {
+        return Regex.Replace(
+            markdown,
+            @"```(?:mermaid|graph|sequenceDiagram|gantt|classDiagram)\s+(.*?)```",
+            match =>
+            {
+                var content = match.Groups[1].Value;
+                return $"<div class=\"mermaid\">\n{content.Trim()}\n</div>";
+            },
+            RegexOptions.Singleline | RegexOptions.Compiled);
+    }
+
+
     
     public static string GenerateMarkdownWithMetadata(this BlogPost post)
     {

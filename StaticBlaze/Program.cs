@@ -1,13 +1,11 @@
 using Blazored.LocalStorage;
 using Microsoft.AspNetCore.Components.Web;
 using Microsoft.AspNetCore.Components.WebAssembly.Hosting;
-using Microsoft.Extensions.DependencyInjection;
 using StaticBlaze.Services;
 using StaticBlaze.Utilities;
 using StaticBlaze.Components;
 
 var builder = WebAssemblyHostBuilder.CreateDefault(args);
-
 
 builder.RootComponents.Add<App>("#app");
 builder.RootComponents.Add<HeadOutlet>("head::after");
@@ -20,7 +18,5 @@ builder.Services.AddBlazoredLocalStorage();
 builder.SetGitConfig();
 
 builder.Services.AddScoped(sp => new HttpClient { });
-
-// Add routing configuration
 
 await builder.Build().RunAsync();
