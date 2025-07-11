@@ -34,8 +34,7 @@ public class BlogService : IBlogService
         }
 
         var post = postSummary.ParseMarkdown();
-        var MdReponse = docResponse.Result.ToHtml();
-        post.Content = MdReponse;
+        post.Content = docResponse.Result;
         return post;
     }
     

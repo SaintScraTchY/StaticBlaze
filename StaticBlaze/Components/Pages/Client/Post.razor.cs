@@ -13,32 +13,18 @@ public partial class Post : ComponentBase
 
     [Parameter] public string Slug { get; set; }
     private BlogPost? _blogPost;
-    private readonly IBlogService _blogService; 
-    
-    private ElementReference MarkdownContainer;
-    private IJSObjectReference? _mermaidInterop;
+    private readonly IBlogService _blogService;
 
     protected override async Task OnAfterRenderAsync(bool firstRender)
     {
-        if (firstRender)
-        {
-            _mermaidInterop = await JsRuntime.InvokeAsync<IJSObjectReference>("import", "/js/mermaid-init.js");
-            await _mermaidInterop.InvokeVoidAsync("initMermaid");
-        }
-    }
+        _blogPost = await _blogService.GetPostAsync(Slug);
 
-    public async ValueTask DisposeAsync()
-    {
-        if (_mermaidInterop is not null)
+        Console.WriteLine("the Thumbnail is: " + _blogPost?.Thumbnail);
+
+        if (firstRender && !string.IsNullOrEmpty(_blogPost?.Content))
         {
-            await _mermaidInterop.DisposeAsync();
+            await JsRuntime.InvokeVoidAsync("renderMarkdown", _blogPost.Content, "postContent");
         }
-    }
-    
-    protected override async Task OnParametersSetAsync()
-    {
-        _blogPost = await _blogService.GetPostAsync(Slug) ?? new BlogPost();
-        Console.WriteLine("the Thumbnail is : "+ _blogPost.Thumbnail);
-        await base.OnParametersSetAsync();
+        await base.OnAfterRenderAsync(firstRender);
     }
 }

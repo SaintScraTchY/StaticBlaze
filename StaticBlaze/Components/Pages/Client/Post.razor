@@ -1,30 +1,27 @@
 ﻿@inject IJSRuntime JsRuntime
 @page "/posts/{Slug}"
 <div class="pt-20 px-4 sm:px-8">
+<article class="prose prose-neutral lg:prose-xl dark:prose-invert mx-auto ">
 @if (_blogPost is null)
 {
     <h3 class="text-center text-red-500 mt-10">Post not found.</h3>
 }
 else
 {
-    <article class="prose prose-neutral lg:prose-xl dark:prose-invert mx-auto ">
-        <h1 class="text-3xl font-bold mb-4 text-center dark:text-white">@_blogPost.Title</h1>
+    <h1 class="text-3xl font-bold mb-4 text-center dark:text-white">@_blogPost.Title</h1>
 
-        @if (!string.IsNullOrEmpty(_blogPost.Thumbnail))
-        {
-            <img src="@_blogPost.Thumbnail"
-                 alt="@_blogPost.Title - thumbnail"
-                 class="rounded-xl shadow-md max-h-[400px] w-auto mx-auto my-6 object-contain"/>
-        }
+    @if (!string.IsNullOrEmpty(_blogPost.Thumbnail))
+    {
+        <img src="@_blogPost.Thumbnail" alt="@_blogPost.Title - thumbnail"
+            class="rounded-xl shadow-md max-h-[400px] w-auto mx-auto my-6 object-contain"/>
+    }
 
-        <div class="flex justify-between text-sm text-gray-500 dark:text-gray-400 mb-6">
-            <span>@_blogPost.Author</span>
-            <span>@_blogPost.CreatedDateTime.ToString("MMMM dd, yyyy")</span>
-        </div>
-        
-        <div class="markdown-content prose prose-neutral dark:prose-invert max-w-none">
-            @((MarkupString)_blogPost.Content)
-        </div>
-    </article>
+    <div class="flex justify-between text-sm text-gray-500 dark:text-gray-400 mb-6">
+        <span>@_blogPost.Author</span>
+        <span>@_blogPost.CreatedDateTime.ToString("MMMM dd, yyyy")</span>
+    </div>
+            @* @((MarkupString)_blogPost.Content) *@
 }
+<div id="postContent" class="markdown-content prose prose-neutral dark:prose-invert max-w-none"></div>
+</article>
 </div>
