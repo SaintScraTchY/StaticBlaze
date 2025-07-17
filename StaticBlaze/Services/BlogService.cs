@@ -21,7 +21,7 @@ public class BlogService : IBlogService
 
     public async Task<BlogPost?> GetPostAsync(string slug)
     {
-        var docResponse = _httpClient.GetStringAsync($"{_navigationManager.BaseUri}{StaticBlazeConfig.BlogDocs}/{slug}.md.gz");
+        var docResponse = _httpClient.GetStringAsync($"{_navigationManager.BaseUri}{StaticBlazeConfig.BlogDocs}/{slug}.md");
         var postResponse = _httpClient.GetStringAsync($"{_navigationManager.BaseUri}{StaticBlazeConfig.BlogPosts}/{slug}.html");
         await Task.WhenAll(docResponse, postResponse);
 
@@ -30,11 +30,11 @@ public class BlogService : IBlogService
         if (string.IsNullOrEmpty(postSummary))
         {
             Console.WriteLine($"Post not found: {slug}");
-            Console.WriteLine(string.IsNullOrEmpty(postSummary));
-            Console.WriteLine(string.IsNullOrEmpty(postContent));
             return null;
         }
 
+        Console.WriteLine(string.IsNullOrEmpty(postSummary));
+        Console.WriteLine(string.IsNullOrEmpty(postContent));
         var post = postSummary.ParseMarkdown();
         post.Content = docResponse.Result;
         return post;
