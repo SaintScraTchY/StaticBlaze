@@ -56,7 +56,6 @@ public static partial class MarkdownHelper
         return Markdown.ToHtml(text, pipeline);
     }
 
-    
     private static string PreprocessMermaid(string markdown)
     {
         return Regex.Replace(

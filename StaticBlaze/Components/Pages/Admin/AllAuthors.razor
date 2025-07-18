@@ -1,0 +1,170 @@
+﻿@page "/admin/authors"
+@using StaticBlaze.Models
+@using StaticBlaze.Services
+
+<PageTitle>All Authors - StaticBlaze Admin</PageTitle>
+
+<div class="space-y-6">
+    <!-- Header -->
+    <div class="flex justify-between items-center">
+        <div>
+            <h1 class="text-2xl font-bold text-gray-900 dark:text-white">Authors</h1>
+            <p class="mt-1 text-sm text-gray-500 dark:text-gray-400">Manage your blog authors</p>
+        </div>
+        <a href="/admin/authors/create" class="inline-flex items-center px-4 py-2 border border-transparent rounded-md shadow-sm text-sm font-medium text-white bg-indigo-600 hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500">
+            <svg class="-ml-1 mr-2 h-5 w-5" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" fill="currentColor">
+                <path fill-rule="evenodd" d="M10 3a1 1 0 011 1v5h5a1 1 0 110 2h-5v5a1 1 0 11-2 0v-5H4a1 1 0 110-2h5V4a1 1 0 011-1z" clip-rule="evenodd" />
+            </svg>
+            New Author
+        </a>
+    </div>
+
+    <!-- Search and Filter -->
+    <div class="flex gap-4 items-center">
+        <div class="flex-1">
+            <div class="relative">
+                <input type="text" 
+                       @bind="searchTerm" 
+                       @bind:event="oninput"
+                       class="w-full pl-10 pr-4 py-2 rounded-lg border border-gray-300 dark:border-gray-600 bg-white dark:bg-gray-700 text-gray-900 dark:text-white focus:ring-2 focus:ring-indigo-500 dark:focus:ring-indigo-400" 
+                       placeholder="Search authors...">
+                <div class="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
+                    <svg class="h-5 w-5 text-gray-400" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" fill="currentColor">
+                        <path fill-rule="evenodd" d="M8 4a4 4 0 100 8 4 4 0 000-8zM2 8a6 6 0 1110.89 3.476l4.817 4.817a1 1 0 01-1.414 1.414l-4.816-4.816A6 6 0 012 8z" clip-rule="evenodd" />
+                    </svg>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    @if (loading)
+    {
+        <!-- Skeleton Loading -->
+        <div class="space-y-4">
+            @for (var i = 0; i < 3; i++)
+            {
+                <div class="animate-pulse bg-white dark:bg-gray-800 rounded-lg shadow p-4">
+                    <div class="flex items-center space-x-4">
+                        <div class="rounded-full bg-gray-200 dark:bg-gray-700 h-12 w-12"></div>
+                        <div class="flex-1 space-y-2">
+                            <div class="h-4 bg-gray-200 dark:bg-gray-700 rounded w-1/4"></div>
+                            <div class="h-3 bg-gray-200 dark:bg-gray-700 rounded w-1/2"></div>
+                        </div>
+                    </div>
+                </div>
+            }
+        </div>
+    }
+    else if (authors == null || !authors.Any())
+    {
+        <!-- Empty State -->
+        <div class="text-center py-12">
+            <svg class="mx-auto h-12 w-12 text-gray-400" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4.354a4 4 0 110 5.292M15 21H3v-1a6 6 0 0112 0v1zm0 0h6v-1a6 6 0 00-9-5.197M13 7a4 4 0 11-8 0 4 4 0 018 0z" />
+            </svg>
+            <h3 class="mt-2 text-sm font-medium text-gray-900 dark:text-white">No authors</h3>
+            <p class="mt-1 text-sm text-gray-500 dark:text-gray-400">Get started by creating a new author.</p>
+            <div class="mt-6">
+                <a href="/admin/authors/create" class="inline-flex items-center px-4 py-2 border border-transparent shadow-sm text-sm font-medium rounded-md text-white bg-indigo-600 hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500">
+                    <svg class="-ml-1 mr-2 h-5 w-5" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" fill="currentColor">
+                        <path fill-rule="evenodd" d="M10 3a1 1 0 011 1v5h5a1 1 0 110 2h-5v5a1 1 0 11-2 0v-5H4a1 1 0 110-2h5V4a1 1 0 011-1z" clip-rule="evenodd" />
+                    </svg>
+                    New Author
+                </a>
+            </div>
+        </div>
+    }
+    else
+    {
+        <!-- Authors Grid -->
+        <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+            @foreach (var author in FilteredAuthors)
+            {
+                <div class="bg-white dark:bg-gray-800 rounded-lg shadow-sm hover:shadow-md transition-shadow duration-200">
+                    <div class="p-6 space-y-4">
+                        <div class="flex items-center space-x-4">
+                            @if (!string.IsNullOrEmpty(author.ProfilePictureUrl))
+                            {
+                                <img src="@author.ProfilePictureUrl" alt="@author.Name" class="h-12 w-12 rounded-full object-cover"/>
+                            }
+                            else
+                            {
+                                <div class="h-12 w-12 rounded-full bg-indigo-100 dark:bg-indigo-900 flex items-center justify-center">
+                                    <span class="text-xl font-medium text-indigo-600 dark:text-indigo-300">
+                                        @(author.Name.Length > 0 ? author.Name[0].ToString().ToUpper() : "")
+                                    </span>
+                                </div>
+                            }
+                            <div>
+                                <h3 class="text-lg font-medium text-gray-900 dark:text-white">@author.Name</h3>
+                                <p class="text-sm text-gray-500 dark:text-gray-400">@@@author.Username</p>
+                            </div>
+                        </div>
+
+                        <div class="text-sm text-gray-500 dark:text-gray-400 line-clamp-2">
+                            @author.AboutMe
+                        </div>
+
+                        <div class="flex items-center justify-between pt-4 border-t border-gray-200 dark:border-gray-700">
+                            <div class="text-sm text-gray-500 dark:text-gray-400">
+                                @author.PostIds.Count posts
+                            </div>
+                            <div class="flex space-x-2">
+                                <button @onclick="() => EditAuthor(author.Id)" class="inline-flex items-center p-2 text-indigo-600 hover:text-indigo-800 dark:text-indigo-400 dark:hover:text-indigo-300">
+                                    <svg class="h-5 w-5" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" fill="currentColor">
+                                        <path d="M13.586 3.586a2 2 0 112.828 2.828l-.793.793-2.828-2.828.793-.793zM11.379 5.793L3 14.172V17h2.828l8.38-8.379-2.83-2.828z" />
+                                    </svg>
+                                </button>
+                                <button @onclick="() => DeleteAuthor(author.Id)" class="inline-flex items-center p-2 text-red-600 hover:text-red-800 dark:text-red-400 dark:hover:text-red-300">
+                                    <svg class="h-5 w-5" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" fill="currentColor">
+                                        <path fill-rule="evenodd" d="M9 2a1 1 0 00-.894.553L7.382 4H4a1 1 0 000 2v10a2 2 0 002 2h8a2 2 0 002-2V6a1 1 0 100-2h-3.382l-.724-1.447A1 1 0 0011 2H9zM7 8a1 1 0 012 0v6a1 1 0 11-2 0V8zm5-1a1 1 0 00-1 1v6a1 1 0 102 0V8a1 1 0 00-1-1z" clip-rule="evenodd" />
+                                    </svg>
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            }
+        </div>
+    }
+</div>
+
+@code {
+    private List<Author>? authors;
+    private bool loading = true;
+    private string searchTerm = "";
+
+    [Inject]
+    private IBlogService BlogService { get; set; } = default!;
+    
+    [Inject]
+    private NavigationManager NavigationManager { get; set; } = default!;
+
+    protected override async Task OnInitializedAsync()
+    {
+        loading = true;
+        authors = await BlogService.GetAllAuthorsAsync();
+        loading = false;
+    }
+
+    private IEnumerable<Author> FilteredAuthors =>
+        authors?.Where(a =>
+            string.IsNullOrWhiteSpace(searchTerm) ||
+            a.Name.Contains(searchTerm, StringComparison.OrdinalIgnoreCase) ||
+            a.Username.Contains(searchTerm, StringComparison.OrdinalIgnoreCase) ||
+            a.Email.Contains(searchTerm, StringComparison.OrdinalIgnoreCase)
+        ) ?? [];
+
+    private void EditAuthor(Guid id)
+    {
+        NavigationManager.NavigateTo($"/admin/authors/edit/{id}");
+    }
+
+    private async Task DeleteAuthor(Guid id)
+    {
+        if (await BlogService.DeleteAuthorAsync(id))
+        {
+            authors = await BlogService.GetAllAuthorsAsync();
+        }
+    }
+}

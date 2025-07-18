@@ -12,4 +12,9 @@ public interface IBlogService
     Task<List<MetaPost>> GetRecentPosts(int count);
     Task<List<ActivityItem>> GetRecentActivity(int count);
     Task<bool> DeletePost(string id);
+    Task<List<Author>?> GetAllAuthorsAsync();
+    Task<Author?> GetAuthorByIdAsync(Guid id);
+    Task<bool> CreateAuthorAsync(Author author);
+    Task<bool> UpdateAuthorAsync(Author author);
+    Task<bool> DeleteAuthorAsync(Guid id);
 }

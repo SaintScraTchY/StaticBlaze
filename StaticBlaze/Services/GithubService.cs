@@ -4,6 +4,7 @@ using System.Net.Http;
 using System.Net.Http.Headers;
 using System.Net.Http.Json;
 using Blazored.LocalStorage;
+using Microsoft.AspNetCore.Components.Forms;
 using StaticBlaze.Constants;
 using StaticBlaze.Models;
 using StaticBlaze.Utilities.MarkdownParser;
@@ -80,16 +81,56 @@ public class GithubService : IGithubService
 
     public async Task<string> UploadImageToGitHub(byte[] imageBytes, string fileName)
     {
+        return await UploadToGitHubAsync(imageBytes, fileName);
+    }
+
+    public async Task<string> UploadFileAsync(IBrowserFile file)
+    {
+        using var stream = file.OpenReadStream(maxAllowedSize: 10485760); // 10MB max
+        using var ms = new MemoryStream();
+        await stream.CopyToAsync(ms);
+        return await UploadToGitHubAsync(ms.ToArray(), file.Name);
+    }
+
+    public async Task<string> UploadFileAsync(Stream stream, string fileName)
+    {
+        using var ms = new MemoryStream();
+        await stream.CopyToAsync(ms);
+        return await UploadToGitHubAsync(ms.ToArray(), fileName);
+    }
+
+    public async Task<string> UploadFileAsync(string base64Content, string fileName)
+    {
+        var bytes = Convert.FromBase64String(base64Content);
+        return await UploadToGitHubAsync(bytes, fileName);
+    }
+
+    public async Task<List<string>> UploadFilesAsync(IEnumerable<IBrowserFile> files)
+    {
+        var tasks = files.Select(async file =>
+        {
+            using var stream = file.OpenReadStream(maxAllowedSize: 10485760); // 10MB max
+            using var ms = new MemoryStream();
+            await stream.CopyToAsync(ms);
+            return await UploadToGitHubAsync(ms.ToArray(), file.Name);
+        });
+
+        var results = await Task.WhenAll(tasks);
+        return results.Where(url => !string.IsNullOrEmpty(url)).ToList();
+    }
+
+    private async Task<string> UploadToGitHubAsync(byte[] fileBytes, string fileName)
+    {
         var ghPAT = await _localStorage.GetItemAsStringAsync("GitHubToken");
-        if (string.IsNullOrEmpty(ghPAT)) return null;
+        if (string.IsNullOrEmpty(ghPAT)) return string.Empty;
 
         var path = $"{StaticBlazeConfig.ProjectName}{StaticBlazeConfig.BlogAssets}/{fileName}";
         var githubApiUrl = $"https://api.github.com/repos/{GithubConfig.Owner}/{GithubConfig.Repo}/contents/{path}";
 
         var content = new
         {
-            message = $"Upload image {fileName}",
-            content = Convert.ToBase64String(imageBytes),
+            message = $"Upload file {fileName}",
+            content = Convert.ToBase64String(fileBytes),
             branch = GithubConfig.Branch
         };
 
@@ -101,11 +142,19 @@ public class GithubService : IGithubService
         request.Headers.Authorization = new AuthenticationHeaderValue("token", ghPAT);
         request.Headers.UserAgent.ParseAdd("StaticBlaze");
 
-        var response = await _httpClient.SendAsync(request);
-        if (!response.IsSuccessStatusCode) return string.Empty;
+        try
+        {
+            var response = await _httpClient.SendAsync(request);
+            if (!response.IsSuccessStatusCode) return string.Empty;
 
-        var responseData = await response.Content.ReadFromJsonAsync<GitHubUploadResponse>();
-        return responseData?.DownloadUrl?.DownloadUrl ?? string.Empty;
+            var responseData = await response.Content.ReadFromJsonAsync<GitHubUploadResponse>();
+            return responseData?.DownloadUrl?.DownloadUrl ?? string.Empty;
+        }
+        catch (Exception ex)
+        {
+            Console.WriteLine($"Error uploading file: {ex.Message}");
+            return string.Empty;
+        }
     }
 
     public async Task<int> GetTotalPosts()

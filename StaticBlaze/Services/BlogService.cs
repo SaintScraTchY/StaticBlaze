@@ -1,6 +1,7 @@
 ﻿using StaticBlaze.Constants;
 using StaticBlaze.Models;
 using StaticBlaze.Utilities.MarkdownParser;
+using System.Text.Json;
 
 namespace StaticBlaze.Services;
 
@@ -10,6 +11,7 @@ public class BlogService : IBlogService
     private readonly IGithubService _githubService;
     private readonly IAnalyticsService _analyticsService;
     private readonly NavigationManager _navigationManager;
+    private readonly string _authorsPath;
 
     public BlogService(HttpClient httpClient, NavigationManager navigationManager, IGithubService githubService, IAnalyticsService analyticsService)
     {
@@ -17,6 +19,7 @@ public class BlogService : IBlogService
         _navigationManager = navigationManager;
         _githubService = githubService;
         _analyticsService = analyticsService;
+        _authorsPath = Path.Combine(StaticBlazeConfig.BlogDB, "authors.json");
     }
 
     public async Task<BlogPost?> GetPostAsync(string slug)
@@ -256,5 +259,82 @@ public class BlogService : IBlogService
     public Task<bool> DeletePost(string id)
     {
         throw new NotImplementedException();
+    }
+
+    public async Task<List<Author>> GetAllAuthorsAsync()
+    {
+        try
+        {
+            //var content = await _githubService.GetFileContentAsync(_authorsPath);
+            // return content != null 
+            //     ? JsonSerializer.Deserialize<List<Author>>(content) ?? []
+            //     : [];
+            return [];
+        }
+        catch
+        {
+            return [];
+        }
+    }
+
+    public async Task<Author?> GetAuthorByIdAsync(Guid id)
+    {
+        var authors = await GetAllAuthorsAsync();
+        return authors.FirstOrDefault(a => a.Id == id);
+    }
+
+    public async Task<bool> CreateAuthorAsync(Author author)
+    {
+        try
+        {
+            var authors = await GetAllAuthorsAsync();
+            authors.Add(author);
+            var json = JsonSerializer.Serialize(authors, new JsonSerializerOptions { WriteIndented = true });
+            //await _githubService.UpdateFileAsync(_authorsPath, json);
+            return true;
+        }
+        catch
+        {
+            return false;
+        }
+    }
+
+    public async Task<bool> UpdateAuthorAsync(Author author)
+    {
+        try
+        {
+            var authors = await GetAllAuthorsAsync();
+            var index = authors.FindIndex(a => a.Id == author.Id);
+            if (index == -1) return false;
+            
+            authors[index] = author;
+            author.LastUpdated = DateTime.UtcNow;
+            
+            var json = JsonSerializer.Serialize(authors, new JsonSerializerOptions { WriteIndented = true });
+            //await _githubService.UpdateFileAsync(_authorsPath, json);
+            return true;
+        }
+        catch
+        {
+            return false;
+        }
+    }
+    public async Task<bool> DeleteAuthorAsync(Guid id)
+    {
+        try
+        {
+            var authors = await GetAllAuthorsAsync();
+            var authorToRemove = authors.FirstOrDefault(a => a.Id == id);
+            if (authorToRemove == null) return false;
+            
+            authors.Remove(authorToRemove);
+            var json = JsonSerializer.Serialize(authors, new JsonSerializerOptions { WriteIndented = true });
+            //await _githubService.UpdateFileAsync(_authorsPath, json);
+            return true;
+        }
+        catch
+        {
+            return false;
+        }
     }
 }
