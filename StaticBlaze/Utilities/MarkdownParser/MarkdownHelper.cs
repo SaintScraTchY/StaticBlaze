@@ -46,10 +46,14 @@ public static partial class MarkdownHelper
             .UseAutoIdentifiers(AutoIdentifierOptions.GitHub)
             .UseGenericAttributes()
             .UseAdvancedExtensions()
+            .UseTaskLists()
+            .UseCitations()
+            .UseFootnotes()
+            .UseFooters()
             .Build();
 
-        var preprocessed = PreprocessMermaid(markdown);
-        return Markdown.ToHtml(preprocessed, pipeline);
+        var text = PreprocessMermaid(markdown);
+        return Markdown.ToHtml(text, pipeline);
     }
 
     
@@ -61,13 +65,11 @@ public static partial class MarkdownHelper
             match =>
             {
                 var content = match.Groups[1].Value;
-                return $"<div class=\"mermaid\">\n{content.Trim()}\n</div>";
+                return $"<pre class=\"mermaid\">\n{content.Trim()}\n</pre>";
             },
             RegexOptions.Singleline | RegexOptions.Compiled);
     }
 
-
-    
     public static string GenerateMarkdownWithMetadata(this BlogPost post)
     {
         return $"""

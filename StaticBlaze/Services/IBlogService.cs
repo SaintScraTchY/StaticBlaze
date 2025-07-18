@@ -4,6 +4,8 @@ namespace StaticBlaze.Services;
 
 public interface IBlogService
 {
+    ValueTask<IList<BlogPost>> GetPosts(int page, int pageSize, string? search = null, string? tag = null, string? category = null);
+    ValueTask<IList<BlogPost>> GetLandingPosts();
     Task<DashboardStats> GetDashboardStats();
     Task<List<MetaPost>> GetPostsAsync();
     Task<BlogPost?> GetPostAsync(string slug);

@@ -21,7 +21,7 @@ public class BlogService : IBlogService
 
     public async Task<BlogPost?> GetPostAsync(string slug)
     {
-        var docResponse = _httpClient.GetStringAsync($"{_navigationManager.BaseUri}{StaticBlazeConfig.BlogDocs}/{slug}.md");
+        var docResponse = _httpClient.GetStringAsync($"{_navigationManager.BaseUri}{StaticBlazeConfig.BlogDocs}/{slug}.md.gz");
         var postResponse = _httpClient.GetStringAsync($"{_navigationManager.BaseUri}{StaticBlazeConfig.BlogPosts}/{slug}.html");
         await Task.WhenAll(docResponse, postResponse);
 
@@ -33,13 +33,144 @@ public class BlogService : IBlogService
             return null;
         }
 
-        Console.WriteLine(string.IsNullOrEmpty(postSummary));
-        Console.WriteLine(string.IsNullOrEmpty(postContent));
         var post = postSummary.ParseMarkdown();
-        post.Content = docResponse.Result;
+        post.Content = docResponse.Result.ToHtml();
         return post;
     }
-    
+
+    public ValueTask<IList<BlogPost>> GetPosts(int page, int pageSize, string? search = null, string? tag = null, string? category = null)
+    {
+        throw new NotImplementedException();
+    }
+
+    public async ValueTask<IList<BlogPost>> GetLandingPosts()
+    {
+        return new List<BlogPost>(
+            new List<BlogPost>
+            {
+                new BlogPost
+                {
+                    Title = "Welcome to StaticBlaze",
+                    Slug = "welcome-to-staticblaze",
+                    Thumbnail = "https://picsum.photos/1280/720",
+                    ShortDescription = "An introduction to StaticBlaze, a static site generator for Blazor.",
+                    PublishedAt = DateTime.Now,
+                    Author = "StaticBlaze Team",
+                    Tags = "Blazor, Static Site Generator",
+                    Category = "Introduction",
+                    ReadTime = 3,
+                    CreatedDateTime = DateTime.Now,
+                    ModifiedDateTime = DateTime.Now,
+                    Guid = Guid.NewGuid()
+                },
+                new BlogPost
+                {
+                    Title = "Getting Started with StaticBlaze",
+                    Slug = "getting-started-with-staticblaze",
+                    Thumbnail = "https://picsum.photos/1280/720",
+                    ShortDescription = "A guide to setting up your first StaticBlaze project.",
+                    PublishedAt = DateTime.Now.AddDays(-1),
+                    Author = "StaticBlaze Team",
+                    Tags = "Blazor, Getting Started",
+                    Category = "Getting Started",
+                    ReadTime = 5,
+                    CreatedDateTime = DateTime.Now.AddDays(-1),
+                    ModifiedDateTime = DateTime.Now.AddDays(-1),
+                    Guid = Guid.NewGuid()
+                },
+                new BlogPost
+                {
+                    Title = "Advanced Features of StaticBlaze",
+                    Slug = "advanced-features-of-staticblaze",
+                    Thumbnail = "https://picsum.photos/1280/720",
+                    ShortDescription = "Explore the advanced features of StaticBlaze for building static sites.",
+                    PublishedAt = DateTime.Now.AddDays(-2),
+                    Author = "StaticBlaze Team",
+                    Tags = "Blazor, Advanced Features",
+                    Category = "Advanced",
+                    ReadTime = 7,
+                    CreatedDateTime = DateTime.Now.AddDays(-2),
+                    ModifiedDateTime = DateTime.Now.AddDays(-2),
+                    Guid = Guid.NewGuid()
+                },
+                new BlogPost
+                {
+                    Title = "StaticBlaze and GitHub Pages",
+                    Slug = "staticblaze-and-github-pages",
+                    Thumbnail = "https://picsum.photos/1280/720",
+                    ShortDescription = "Learn how to deploy your StaticBlaze site to GitHub Pages.",
+                    PublishedAt = DateTime.Now.AddDays(-3),
+                    Author = "StaticBlaze Team",
+                    Tags = "Blazor, GitHub Pages",
+                    Category = "Deployment",
+                    ReadTime = 6,
+                    CreatedDateTime = DateTime.Now.AddDays(-3),
+                    ModifiedDateTime = DateTime.Now.AddDays(-3),
+                    Guid = Guid.NewGuid()
+                },
+                new BlogPost
+                {
+                    Title = "Customizing StaticBlaze",
+                    Slug = "customizing-staticblaze",
+                    Thumbnail = "https://picsum.photos/1280/720",
+                    ShortDescription = "A guide to customizing your StaticBlaze site with themes and plugins.",
+                    PublishedAt = DateTime.Now.AddDays(-4),
+                    Author = "StaticBlaze Team",
+                    Tags = "Blazor, Customization",
+                    Category = "Customization",
+                    ReadTime = 4,
+                    CreatedDateTime = DateTime.Now.AddDays(-4),
+                    ModifiedDateTime = DateTime.Now.AddDays(-4),
+                    Guid = Guid.NewGuid()
+                },
+                new BlogPost
+                {
+                    Title = "StaticBlaze Performance Tips",
+                    Slug = "staticblaze-performance-tips",
+                    Thumbnail = "https://picsum.photos/1280/720",
+                    ShortDescription = "Tips for optimizing the performance of your StaticBlaze site.",
+                    PublishedAt = DateTime.Now.AddDays(-5),
+                    Author = "StaticBlaze Team",
+                    Tags = "Blazor, Performance",
+                    Category = "Performance",
+                    ReadTime = 5,
+                    CreatedDateTime = DateTime.Now.AddDays(-5),
+                    ModifiedDateTime = DateTime.Now.AddDays(-5),
+                    Guid = Guid.NewGuid()
+                },
+                new BlogPost
+                {
+                    Title = "StaticBlaze Community and Support",
+                    Slug = "staticblaze-community-and-support",
+                    Thumbnail = "https://picsum.photos/1280/720",
+                    ShortDescription = "Join the StaticBlaze community and find support resources.",
+                    PublishedAt = DateTime.Now.AddDays(-6),
+                    Author = "StaticBlaze Team",
+                    Tags = "Blazor, Community",
+                    Category = "Community",
+                    ReadTime = 3,
+                    CreatedDateTime = DateTime.Now.AddDays(-6),
+                    ModifiedDateTime = DateTime.Now.AddDays(-6),
+                    Guid = Guid.NewGuid()
+                },
+                new BlogPost
+                {
+                    Title = "StaticBlaze Roadmap",
+                    Slug = "staticblaze-roadmap",
+                    Thumbnail = "https://picsum.photos/1280/720",
+                    ShortDescription = "What's next for StaticBlaze? Check out our roadmap.",
+                    PublishedAt = DateTime.Now.AddDays(-7),
+                    Author = "StaticBlaze Team",
+                    Tags = "Blazor, Roadmap",
+                    Category = "Roadmap",
+                    ReadTime = 4,
+                    CreatedDateTime = DateTime.Now.AddDays(-7),
+                    ModifiedDateTime = DateTime.Now.AddDays(-7),
+                    Guid = Guid.NewGuid()
+                }
+            });
+    }
+
     public async Task<DashboardStats> GetDashboardStats()
     {
         var currentPosts = await _githubService.GetTotalPosts();
@@ -86,9 +217,9 @@ public class BlogService : IBlogService
         // Dummy data for recent posts
         var recentPosts = new List<MetaPost>
         {
-            new() { Title = "Blazor Best Practices", Slug = "blazor-best-practices", ShortDescription = "A guide to Blazor best practices.", PublishedAt = DateTime.Now.AddDays(-1), Author = "John Doe", Tags = "Blazor, C#", ReadTime = 5, CreatedDateTime = DateTime.Now, EditedDateTime = DateTime.Now, Guid = Guid.NewGuid() },
-            new() { Title = "C# 11 Features", Slug = "csharp-11-features", ShortDescription = "Exploring the new features in C# 11.", PublishedAt = DateTime.Now.AddDays(-2), Author = "Jane Smith", Tags = "C#, .NET", ReadTime = 8, CreatedDateTime = DateTime.Now, EditedDateTime = DateTime.Now, Guid = Guid.NewGuid() },
-            new() { Title = "ASP.NET Core Updates", Slug = "aspnet-core-updates", ShortDescription = "Latest updates in ASP.NET Core.", PublishedAt = DateTime.Now.AddDays(-3), Author = "Alice Johnson", Tags = "ASP.NET, Core", ReadTime = 10, CreatedDateTime = DateTime.Now, EditedDateTime = DateTime.Now, Guid = Guid.NewGuid() }
+            new() { Title = "Blazor Best Practices", Slug = "blazor-best-practices", ShortDescription = "A guide to Blazor best practices.", PublishedAt = DateTime.Now.AddDays(-1), Author = "John Doe", Tags = "Blazor, C#", ReadTime = 5, CreatedDateTime = DateTime.Now, ModifiedDateTime = DateTime.Now, Guid = Guid.NewGuid() },
+            new() { Title = "C# 11 Features", Slug = "csharp-11-features", ShortDescription = "Exploring the new features in C# 11.", PublishedAt = DateTime.Now.AddDays(-2), Author = "Jane Smith", Tags = "C#, .NET", ReadTime = 8, CreatedDateTime = DateTime.Now, ModifiedDateTime = DateTime.Now, Guid = Guid.NewGuid() },
+            new() { Title = "ASP.NET Core Updates", Slug = "aspnet-core-updates", ShortDescription = "Latest updates in ASP.NET Core.", PublishedAt = DateTime.Now.AddDays(-3), Author = "Alice Johnson", Tags = "ASP.NET, Core", ReadTime = 10, CreatedDateTime = DateTime.Now, ModifiedDateTime = DateTime.Now, Guid = Guid.NewGuid() }
         };
 
         // Limit the number of posts to the requested count

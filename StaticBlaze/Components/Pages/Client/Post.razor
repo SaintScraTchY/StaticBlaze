@@ -1,27 +1,105 @@
 ﻿@inject IJSRuntime JsRuntime
 @page "/posts/{Slug}"
-<div class="pt-20 px-4 sm:px-8">
-<article class="prose prose-neutral lg:prose-xl dark:prose-invert mx-auto ">
-@if (_blogPost is null)
-{
-    <h3 class="text-center text-red-500 mt-10">Post not found.</h3>
-}
-else
-{
-    <h1 class="text-3xl font-bold mb-4 text-center dark:text-white">@_blogPost.Title</h1>
+@implements IAsyncDisposable
 
-    @if (!string.IsNullOrEmpty(_blogPost.Thumbnail))
-    {
-        <img src="@_blogPost.Thumbnail" alt="@_blogPost.Title - thumbnail"
-            class="rounded-xl shadow-md max-h-[400px] w-auto mx-auto my-6 object-contain"/>
-    }
+<div class="min-h-screen pt-20 px-4 sm:px-8 bg-gray-50 dark:bg-gray-900">
+    <div class="max-w-7/8 mx-auto">
+        @if (_blogPost is null)
+        {
+            <div class="animate-pulse space-y-8">
+                <div class="h-8 bg-gray-200 dark:bg-gray-700 rounded-lg w-3/4 mx-auto"></div>
+                <div class="h-64 bg-gray-200 dark:bg-gray-700 rounded-xl"></div>
+                <div class="space-y-4">
+                    <div class="h-4 bg-gray-200 dark:bg-gray-700 rounded w-full"></div>
+                    <div class="h-4 bg-gray-200 dark:bg-gray-700 rounded w-5/6"></div>
+                    <div class="h-4 bg-gray-200 dark:bg-gray-700 rounded w-4/6"></div>
+                </div>
+            </div>
+        }
+        else
+        {
+            <article class="bg-white dark:bg-gray-800 rounded-2xl shadow-lg">
+                @if (!string.IsNullOrEmpty(_blogPost.Thumbnail))
+                {
+                    <div class="relative max-h-96 min-h-72 w-full">
+                        <img src="https://picsum.photos/1280/720" alt="@_blogPost.Title - thumbnail"
+                             class="absolute inset-0 w-full h-full object-cover"/>
+                    </div>
+                }
 
-    <div class="flex justify-between text-sm text-gray-500 dark:text-gray-400 mb-6">
-        <span>@_blogPost.Author</span>
-        <span>@_blogPost.CreatedDateTime.ToString("MMMM dd, yyyy")</span>
+                <div class="p-6 sm:p-8">
+                    <h1 class="text-3xl sm:text-4xl font-bold text-gray-900 dark:text-white mb-4">@_blogPost.Title</h1>
+
+                    <div class="flex flex-wrap gap-4 items-center mb-6 text-sm">
+                        <div class="flex items-center text-gray-600 dark:text-gray-300">
+                            <svg class="w-5 h-5 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" 
+                                      d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z" />
+                            </svg>
+                            <span>@_blogPost.Author</span>
+                        </div>
+
+                        <div class="flex items-center text-gray-600 dark:text-gray-300">
+                            <svg class="w-5 h-5 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" 
+                                      d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z" />
+                            </svg>
+                            <span>@_blogPost.CreatedDateTime.ToString("MMMM dd, yyyy")</span>
+                        </div>
+
+                        @if (_blogPost.CreatedDateTime != null)
+                        {
+                            <div class="flex items-center text-gray-600 dark:text-gray-300">
+                                <svg class="w-5 h-5 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" 
+                                          d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z" />
+                                </svg>
+                                <span>Updated @_blogPost.CreatedDateTime.ToString("MMM dd, yyyy")</span>
+                            </div>
+                        }
+                    </div>
+
+                    @if (!string.IsNullOrEmpty(_blogPost.Guid.ToString()) || (_blogPost.Tags != null && _blogPost.Tags.Any()))
+                    {
+                        <div class="flex flex-wrap gap-2 mb-8">
+                            @if (!string.IsNullOrEmpty(_blogPost.Guid.ToString()))
+                            {
+                                <span class="px-3 py-1 bg-purple-100 text-purple-800 dark:bg-purple-900 dark:text-purple-100 rounded-full text-sm">
+                                    @_blogPost.Guid
+                                </span>
+                            }
+                            @if (_blogPost.Tags != null)
+                            {
+                                @foreach (var tag in _blogPost.Tags)
+                                {
+                                    <span class="px-3 py-1 bg-gray-100 text-gray-700 dark:bsg-gray-700 dark:text-gray-100 rounded-full text-sm">
+                                        #@tag
+                                    </span>
+                                }
+                            }
+                        </div>
+                    }
+
+                    <div id="postContent" class="markdown-content prose prose-lg dark:prose-invert max-w-none 
+                         prose-headings:text-gray-900 dark:prose-headings:text-white
+                         prose-p:text-gray-700 dark:prose-p:text-gray-300
+                         prose-a:text-purple-600 hover:prose-a:text-purple-500 dark:prose-a:text-purple-400
+                         prose-strong:text-gray-900 dark:prose-strong:text-white
+                         prose-code:text-gray-900 dark:prose-code:text-white
+                         prose-pre:bg-gray-100 dark:prose-pre:bg-gray-800
+                         prose-blockquote:border-l-purple-500
+                         prose-img:rounded-xl prose-img:shadow-lg">
+                         @if (!_contentRendered)
+                         {
+                             <div class="animate-pulse space-y-4">
+                                 <div class="h-4 bg-gray-200 dark:bg-gray-700 rounded w-full"></div>
+                                 <div class="h-4 bg-gray-200 dark:bg-gray-700 rounded w-5/6"></div>
+                                 <div class="h-4 bg-gray-200 dark:bg-gray-700 rounded w-4/6"></div>
+                             </div>
+                         }
+                    </div>
+                </div>
+            </article>
+        }
     </div>
-            @* @((MarkupString)_blogPost.Content) *@
-}
-<div id="postContent" class="markdown-content prose prose-neutral dark:prose-invert max-w-none"></div>
-</article>
 </div>

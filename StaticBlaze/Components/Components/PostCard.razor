@@ -1,0 +1,68 @@
+﻿@using StaticBlaze.Models
+
+<div class="group relative bg-white dark:bg-gray-800 rounded-xl shadow-lg hover:shadow-xl transition-all duration-300 overflow-hidden border border-gray-200 dark:border-gray-700">
+    @if (Loading)
+    {
+        <div class="animate-pulse">
+            <div class="h-48 bg-gray-300 dark:bg-gray-700"></div>
+            <div class="p-4">
+                <div class="h-4 bg-gray-300 dark:bg-gray-700 rounded w-3/4 mb-2"></div>
+                <div class="h-3 bg-gray-200 dark:bg-gray-600 rounded w-1/2 mb-4"></div>
+                <div class="h-2 bg-gray-200 dark:bg-gray-600 rounded w-full mb-2"></div>
+                <div class="h-2 bg-gray-200 dark:bg-gray-600 rounded w-4/5"></div>
+            </div>
+        </div>
+    }
+    else
+    {
+        <div class="relative h-48 overflow-hidden">
+            @if (!string.IsNullOrEmpty(Post.Thumbnail))
+            {
+                <img src="@Post.Thumbnail" alt="@Post.Title" class="w-full h-full object-cover transition-transform duration-300 group-hover:scale-105">
+            }
+            else
+            {
+                <div class="w-full h-full bg-gradient-to-br from-blue-400 to-purple-500"></div>
+            }
+            <div class="absolute top-4 left-4">
+                <span class="inline-flex items-center px-3 py-1 rounded-full text-sm font-medium bg-blue-500 text-white">
+                    @Post.Category
+                </span>
+            </div>
+        </div>
+        <div class="p-4">
+            <div class="flex items-center space-x-2 mb-2">
+                <span class="text-sm text-gray-500 dark:text-gray-400">
+                    <i class="fas fa-calendar-alt mr-1"></i>
+                    @Post.ModifiedDateTime.ToShortDateString()
+                </span>
+                <span class="text-sm text-gray-500 dark:text-gray-400">
+                    <i class="fas fa-user mr-1"></i>
+                    @Post.Author
+                </span>
+            </div>
+            <h3 class="text-xl font-semibold mb-2 text-gray-900 dark:text-white hover:text-blue-600 dark:hover:text-blue-400 transition-colors">
+                <a href="/post/@Post.Slug">@Post.Title</a>
+            </h3>
+            <p class="text-gray-600 dark:text-gray-300 text-sm line-clamp-2 mb-4">
+                @Post.ShortDescription
+            </p>
+            <div class="flex flex-wrap gap-2">
+                @foreach (var tag in Post.Tags.Split(',', StringSplitOptions.RemoveEmptyEntries).ToList())
+                {
+                    <span class="inline-flex items-center px-2 py-1 rounded-md text-xs font-medium bg-gray-100 dark:bg-gray-700 text-gray-800 dark:text-gray-200">
+                        #@tag
+                    </span>
+                }
+            </div>
+        </div>
+    }
+</div>
+
+@code {
+    [Parameter]
+    public BlogPost Post { get; set; }
+
+    [Parameter]
+    public bool Loading { get; set; }
+}
