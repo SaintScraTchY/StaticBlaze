@@ -1,73 +1,123 @@
 .loading-container {
     position: fixed;
     inset: 0;
-    background-color: #f9fafb;
     display: flex;
-    flex-direction: column;
-    align-items: center;
     justify-content: center;
-    z-index: 9999;
-    transition: opacity 0.5s ease-in-out;
+    align-items: center;
+    background-color: #f9fafb;
 }
 
 .dark .loading-container {
     background-color: #111827;
 }
 
+.loading-background {
+    position: absolute;
+    inset: 0;
+    overflow: hidden;
+    opacity: 0.5;
+}
+
+.loading-blob {
+    position: absolute;
+    width: 300px;
+    height: 300px;
+    border-radius: 50%;
+    filter: blur(60px);
+    animation: blob-float 10s infinite ease-in-out;
+}
+
+.blob-1 {
+    background: #3b82f6;
+    top: 20%;
+    left: 20%;
+    animation-delay: 0s;
+}
+
+.blob-2 {
+    background: #8b5cf6;
+    bottom: 20%;
+    right: 20%;
+    animation-delay: -3.3s;
+}
+
+.blob-3 {
+    background: #6366f1;
+    top: 50%;
+    left: 50%;
+    animation-delay: -6.6s;
+}
+
 .loading-content {
     position: relative;
-    backdrop-filter: blur(8px);
-    background: rgba(255, 255, 255, 0.3);
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 1.5rem;
     padding: 2rem;
     border-radius: 1rem;
-    border: 1px solid rgba(255, 255, 255, 0.2);
-    text-align: center;
-    transform: translateY(0);
-    animation: content-fade-in 0.6s ease-out;
+    background-color: rgba(255, 255, 255, 0.8);
+    backdrop-filter: blur(8px);
+    box-shadow: 0 8px 32px rgba(0, 0, 0, 0.1);
 }
 
 .dark .loading-content {
-    background: rgba(31, 41, 55, 0.3);
-    border-color: rgba(75, 85, 99, 0.2);
+    background-color: rgba(17, 24, 39, 0.8);
+}
+
+.loading-spinner {
+    width: 48px;
+    height: 48px;
+    border: 4px solid #3b82f6;
+    border-top-color: transparent;
+    border-radius: 50%;
+    animation: spin 1s linear infinite;
+}
+
+.loading-text {
+    font-size: 1.25rem;
+    font-weight: 600;
+    color: #1f2937;
+}
+
+.dark .loading-text {
+    color: #f3f4f6;
 }
 
 .loading-progress-container {
-    width: 100%;
-    max-width: 300px;
+    width: 200px;
     height: 4px;
-    background: rgba(255, 255, 255, 0.1);
+    background-color: #e5e7eb;
     border-radius: 2px;
-    margin-top: 1rem;
     overflow: hidden;
-    position: relative;
+}
+
+.dark .loading-progress-container {
+    background-color: #374151;
 }
 
 .loading-progress-bar {
-    position: absolute;
-    left: 0;
-    top: 0;
     height: 100%;
-    background: linear-gradient(to right, #3b82f6, #8b5cf6);
-    transition: width 0.3s ease-in-out;
+    width: 0;
+    background-color: #3b82f6;
     border-radius: 2px;
+    transition: width 0.3s ease;
+    position: relative;
 }
 
 .loading-progress-glow {
     position: absolute;
     top: 0;
-    left: 0;
+    right: 0;
+    width: 60px;
     height: 100%;
-    width: 100px;
     background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.3), transparent);
     animation: progress-glow 1.5s infinite;
-    transform: skewX(-20deg);
 }
 
 .loading-message {
-    margin-top: 1rem;
     font-size: 0.875rem;
     color: #6b7280;
-    opacity: 0.8;
     transition: opacity 0.3s ease;
 }
 
@@ -75,125 +125,40 @@
     color: #9ca3af;
 }
 
-.loading-spinner {
-    width: 60px;
-    height: 60px;
-    margin-bottom: 1rem;
-    animation: spin 1.5s linear infinite;
-    background: linear-gradient(to right, #3b82f6, #8b5cf6);
-    border-radius: 50%;
-    filter: blur(1px);
-    position: relative;
-}
-
-.loading-spinner::before {
-    content: '';
-    position: absolute;
-    inset: -4px;
-    background: linear-gradient(to right, #3b82f6, #8b5cf6);
-    border-radius: 50%;
-    animation: pulse 2s ease-out infinite;
-    opacity: 0.5;
-}
-
-.loading-text {
-    color: #1f2937;
-    font-size: 1.125rem;
-    font-weight: 500;
-    background: linear-gradient(to right, #3b82f6, #8b5cf6);
-    -webkit-background-clip: text;
-    background-clip: text;
-    -webkit-text-fill-color: transparent;
-}
-
-.dark .loading-text {
-    color: #f3f4f6;
-}
-
-.loading-progress {
-    display: none;
-}
-
-.loading-background {
-    position: absolute;
-    inset: 0;
-    overflow: hidden;
-    z-index: -1;
-    opacity: 0.5;
-}
-
-.loading-blob {
-    position: absolute;
-    width: 150px;
-    height: 150px;
-    border-radius: 50%;
-    filter: blur(30px);
-}
-
-.blob-1 {
-    top: 20%;
-    left: 20%;
-    background: #818cf8;
-    animation: float1 7s infinite;
-}
-
-.blob-2 {
-    top: 60%;
-    right: 20%;
-    background: #c084fc;
-    animation: float2 8s infinite;
-}
-
-.blob-3 {
-    bottom: 20%;
-    left: 30%;
-    background: #34d399;
-    animation: float3 6s infinite;
+/* Animations */
+@keyframes blob-float {
+    0%, 100% {
+        transform: translate(0, 0) scale(1);
+    }
+    25% {
+        transform: translate(-50px, 50px) scale(1.1);
+    }
+    50% {
+        transform: translate(50px, -50px) scale(0.9);
+    }
+    75% {
+        transform: translate(25px, 25px) scale(1.05);
+    }
 }
 
 @keyframes spin {
-    to { transform: rotate(360deg); }
-}
-
-@keyframes float1 {
-    0%, 100% { transform: translate(0, 0); }
-    50% { transform: translate(20px, -20px); }
-}
-
-@keyframes float2 {
-    0%, 100% { transform: translate(0, 0); }
-    50% { transform: translate(-20px, 20px); }
-}
-
-@keyframes float3 {
-    0%, 100% { transform: translate(0, 0); }
-    50% { transform: translate(15px, -15px); }
-}
-
-@keyframes pulse {
-    0% { transform: scale(1); opacity: 0.5; }
-    50% { transform: scale(1.2); opacity: 0; }
-    100% { transform: scale(1); opacity: 0; }
-}
-
-@keyframes content-fade-in {
-    from {
-        opacity: 0;
-        transform: translateY(20px);
-    }
     to {
-        opacity: 1;
-        transform: translateY(0);
+        transform: rotate(360deg);
     }
 }
 
 @keyframes progress-glow {
-    0% { transform: translateX(-100%) skewX(-20deg); }
-    100% { transform: translateX(200%) skewX(-20deg); }
+    0% {
+        transform: translateX(-100%);
+    }
+    100% {
+        transform: translateX(200%);
+    }
 }
 
-/* Hide loading screen when Blazor is ready */
+/* Blazor ready state */
 .blazor-ready .loading-container {
     opacity: 0;
     pointer-events: none;
+    transition: opacity 0.3s ease;
 }
