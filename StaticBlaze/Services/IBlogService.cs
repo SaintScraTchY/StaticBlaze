@@ -17,4 +17,14 @@ public interface IBlogService
     Task<bool> CreateAuthorAsync(Author author);
     Task<bool> UpdateAuthorAsync(Author author);
     Task<bool> DeleteAuthorAsync(Guid id);
+    Task<List<Tag>> GetTagsAsync();
+    Task<bool> DeleteTagAsync(Guid id);
+    Task<Tag> GetTagByIdAsync(Guid id);
+    Task<bool> UpdateTagAsync(Tag tag);
+    Task<bool> CreateTagAsync(Tag tag);
+    Task<List<Category>?> GetCategoriesAsync();
+    Task<bool> DeleteCategoryAsync(Guid id);
+    Task<bool> UpdateCategoryAsync(Category category);
+    Task<bool> CreateCategoryAsync(Category category);
+    Task<Category> GetCategoryByIdAsync(Guid id);
 }

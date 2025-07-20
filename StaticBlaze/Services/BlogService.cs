@@ -12,6 +12,8 @@ public class BlogService : IBlogService
     private readonly IAnalyticsService _analyticsService;
     private readonly NavigationManager _navigationManager;
     private readonly string _authorsPath;
+    private const string _tagsPath = "Blog/data/tags.json";
+    private const string _categoriesPath = "Blog/data/categories.json";
 
     public BlogService(HttpClient httpClient, NavigationManager navigationManager, IGithubService githubService, IAnalyticsService analyticsService)
     {
@@ -214,7 +216,6 @@ public class BlogService : IBlogService
         return await response.Content.ReadFromJsonAsync<List<MetaPost>>();
     }
 
-
     public Task<List<MetaPost>> GetRecentPosts(int count)
     {
         // Dummy data for recent posts
@@ -265,10 +266,10 @@ public class BlogService : IBlogService
     {
         try
         {
-            //var content = await _githubService.GetFileContentAsync(_authorsPath);
-            // return content != null 
-            //     ? JsonSerializer.Deserialize<List<Author>>(content) ?? []
-            //     : [];
+            // var content = await _githubService.GetFileContentAsync(_authorsPath);
+            //  return content != null 
+            //      ? JsonSerializer.Deserialize<List<Author>>(content) ?? []
+            //      : [];
             return [];
         }
         catch
@@ -290,7 +291,7 @@ public class BlogService : IBlogService
             var authors = await GetAllAuthorsAsync();
             authors.Add(author);
             var json = JsonSerializer.Serialize(authors, new JsonSerializerOptions { WriteIndented = true });
-            //await _githubService.UpdateFileAsync(_authorsPath, json);
+            await _githubService.UploadFileAsync(_authorsPath, json);
             return true;
         }
         catch
@@ -311,7 +312,7 @@ public class BlogService : IBlogService
             author.LastUpdated = DateTime.UtcNow;
             
             var json = JsonSerializer.Serialize(authors, new JsonSerializerOptions { WriteIndented = true });
-            //await _githubService.UpdateFileAsync(_authorsPath, json);
+            await _githubService.UploadFileAsync(_authorsPath, json);
             return true;
         }
         catch
@@ -329,7 +330,177 @@ public class BlogService : IBlogService
             
             authors.Remove(authorToRemove);
             var json = JsonSerializer.Serialize(authors, new JsonSerializerOptions { WriteIndented = true });
-            //await _githubService.UpdateFileAsync(_authorsPath, json);
+            await _githubService.UploadFileAsync(_authorsPath, json);
+            return true;
+        }
+        catch
+        {
+            return false;
+        }
+    }
+
+    public async Task<List<Tag>> GetTagsAsync()
+    {
+        try
+        {
+            // var json = await _githubService.GetFileContentAsync(_tagsPath);
+            // return string.IsNullOrEmpty(json) 
+            //     ? new List<Tag>() 
+            //     : JsonSerializer.Deserialize<List<Tag>>(json) ?? new List<Tag>();
+            return
+            [
+                new Tag
+                {
+                    Id = Guid.NewGuid(), Title = "Blazor", Slug = "blazor", LastUpdated = DateTime.UtcNow,
+                    Posts = []
+                },
+                new Tag
+                {
+                    Id = Guid.NewGuid(), Title = "Static Site Generator", Slug = "static-site-generator",
+                    LastUpdated = DateTime.UtcNow, 
+                    Posts = []
+                },
+                new Tag
+                {
+                    Id = Guid.NewGuid(), Title = "WebAssembly", Slug = "webassembly", LastUpdated = DateTime.UtcNow,
+                    Posts = []
+                }
+            ];
+        }
+        catch
+        {
+            return new List<Tag>();
+        }
+    }
+
+    public async Task<Tag?> GetTagByIdAsync(Guid id)
+    {
+        var tags = await GetTagsAsync();
+        return tags.FirstOrDefault(t => t.Id == id);
+    }
+
+    public async Task<bool> CreateTagAsync(Tag tag)
+    {
+        try
+        {
+            var tags = await GetTagsAsync();
+            tags.Add(tag);
+            var json = JsonSerializer.Serialize(tags, new JsonSerializerOptions { WriteIndented = true });
+            await _githubService.UploadFileAsync(_tagsPath, json);
+            return true;
+        }
+        catch
+        {
+            return false;
+        }
+    }
+
+    public async Task<bool> UpdateTagAsync(Tag tag)
+    {
+        try
+        {
+            var tags = await GetTagsAsync();
+            var index = tags.FindIndex(t => t.Id == tag.Id);
+            if (index == -1) return false;
+
+            tags[index] = tag;
+            var json = JsonSerializer.Serialize(tags, new JsonSerializerOptions { WriteIndented = true });
+            await _githubService.UploadFileAsync(_tagsPath, json);
+            return true;
+        }
+        catch
+        {
+            return false;
+        }
+    }
+
+    public async Task<bool> DeleteTagAsync(Guid id)
+    {
+        try
+        {
+            var tags = await GetTagsAsync();
+            var tag = tags.FirstOrDefault(t => t.Id == id);
+            if (tag == null) return false;
+
+            tags.Remove(tag);
+            var json = JsonSerializer.Serialize(tags, new JsonSerializerOptions { WriteIndented = true });
+            await _githubService.UploadFileAsync(_tagsPath, json);
+            return true;
+        }
+        catch
+        {
+            return false;
+        }
+    }
+
+    public async Task<List<Category>> GetCategoriesAsync()
+    {
+        try
+        {
+            // var json = await _githubService.GetFileContentAsync(_categoriesPath);
+            // return string.IsNullOrEmpty(json) 
+            //     ? new List<Category>() 
+            //     : JsonSerializer.Deserialize<List<Category>>(json) ?? new List<Category>();
+            return [];
+        }
+        catch
+        {
+            return [];
+        }
+    }
+
+    public async Task<Category?> GetCategoryByIdAsync(Guid id)
+    {
+        var categories = await GetCategoriesAsync();
+        return categories.FirstOrDefault(c => c.Id == id);
+    }
+
+    public async Task<bool> CreateCategoryAsync(Category category)
+    {
+        try
+        {
+            var categories = await GetCategoriesAsync();
+            categories.Add(category);
+            var json = JsonSerializer.Serialize(categories, new JsonSerializerOptions { WriteIndented = true });
+            await _githubService.UploadFileAsync(_categoriesPath, json);
+            return true;
+        }
+        catch
+        {
+            return false;
+        }
+    }
+
+    public async Task<bool> UpdateCategoryAsync(Category category)
+    {
+        try
+        {
+            var categories = await GetCategoriesAsync();
+            var index = categories.FindIndex(c => c.Id == category.Id);
+            if (index == -1) return false;
+
+            categories[index] = category;
+            var json = JsonSerializer.Serialize(categories, new JsonSerializerOptions { WriteIndented = true });
+            await _githubService.UploadFileAsync(_categoriesPath, json);
+            return true;
+        }
+        catch
+        {
+            return false;
+        }
+    }
+
+    public async Task<bool> DeleteCategoryAsync(Guid id)
+    {
+        try
+        {
+            var categories = await GetCategoriesAsync();
+            var category = categories.FirstOrDefault(c => c.Id == id);
+            if (category == null) return false;
+
+            categories.Remove(category);
+            var json = JsonSerializer.Serialize(categories, new JsonSerializerOptions { WriteIndented = true });
+            await _githubService.UploadFileAsync(_categoriesPath, json);
             return true;
         }
         catch

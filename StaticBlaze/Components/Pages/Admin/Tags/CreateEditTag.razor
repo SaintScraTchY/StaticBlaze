@@ -1,0 +1,96 @@
+﻿@page "/admin/tags/create"
+@page "/admin/tags/edit/{Id:guid}"
+@using StaticBlaze.Models
+@using StaticBlaze.Services
+
+<PageTitle>@(Id == null ? "Create" : "Edit") Tag - StaticBlaze Admin</PageTitle>
+
+<div class="max-w-4xl mx-auto space-y-6">
+    <div>
+        <h1 class="text-2xl font-bold text-gray-900 dark:text-white">@(Id == null ? "Create" : "Edit") Tag</h1>
+        <p class="mt-1 text-sm text-gray-500 dark:text-gray-400">Add or edit tag information</p>
+    </div>
+
+    <div class="bg-white dark:bg-gray-800 shadow rounded-lg p-6">
+        <EditForm Model="@tag" OnValidSubmit="HandleSubmit" class="space-y-6">
+            <DataAnnotationsValidator />
+
+            <!-- Title -->
+            <div>
+                <label for="title" class="block text-sm font-medium text-gray-700 dark:text-gray-300">Title</label>
+                <div class="mt-1">
+                    <InputText @bind-Value="tag.Title" id="title" 
+                              class="shadow-sm focus:ring-indigo-500 focus:border-indigo-500 block w-full sm:text-sm border-gray-300 dark:border-gray-600 rounded-md dark:bg-gray-700 dark:text-white" />
+                    <ValidationMessage For="@(() => tag.Title)" class="text-red-600 dark:text-red-400 text-sm mt-1" />
+                </div>
+            </div>
+
+            <!-- Slug -->
+            <div>
+                <label for="slug" class="block text-sm font-medium text-gray-700 dark:text-gray-300">Slug</label>
+                <div class="mt-1">
+                    <InputText @bind-Value="tag.Slug" id="slug" 
+                              class="shadow-sm focus:ring-indigo-500 focus:border-indigo-500 block w-full sm:text-sm border-gray-300 dark:border-gray-600 rounded-md dark:bg-gray-700 dark:text-white" />
+                    <ValidationMessage For="@(() => tag.Slug)" class="text-red-600 dark:text-red-400 text-sm mt-1" />
+                </div>
+                <p class="mt-1 text-sm text-gray-500 dark:text-gray-400">URL-friendly version of the tag name. Must be lowercase and contain only letters, numbers, and hyphens.</p>
+            </div>
+
+            <!-- Submit Button -->
+            <div class="flex justify-end space-x-3">
+                <button type="button" @onclick="NavigateBack"
+                        class="inline-flex items-center px-4 py-2 border border-gray-300 dark:border-gray-600 shadow-sm text-sm font-medium rounded-md text-gray-700 dark:text-gray-300 bg-white dark:bg-gray-800 hover:bg-gray-50 dark:hover:bg-gray-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500">
+                    Cancel
+                </button>
+                <button type="submit"
+                        class="inline-flex items-center px-4 py-2 border border-transparent shadow-sm text-sm font-medium rounded-md text-white bg-indigo-600 hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500">
+                    @(Id == null ? "Create" : "Update") Tag
+                </button>
+            </div>
+        </EditForm>
+    </div>
+</div>
+
+@code {
+    [Parameter]
+    public Guid? Id { get; set; }
+
+    [Inject]
+    private IBlogService BlogService { get; set; } = default!;
+    
+    [Inject]
+    private NavigationManager NavigationManager { get; set; } = default!;
+
+    private Tag tag = new();
+
+    protected override async Task OnInitializedAsync()
+    {
+        if (Id.HasValue)
+        {
+            var existingTag = await BlogService.GetTagByIdAsync(Id.Value);
+            if (existingTag != null)
+            {
+                tag = existingTag;
+            }
+        }
+    }
+
+    private async Task HandleSubmit()
+    {
+        if (Id.HasValue)
+        {
+            await BlogService.UpdateTagAsync(tag);
+        }
+        else
+        {
+            await BlogService.CreateTagAsync(tag);
+        }
+        
+        NavigateBack();
+    }
+
+    private void NavigateBack()
+    {
+        NavigationManager.NavigateTo("/admin/tags");
+    }
+}

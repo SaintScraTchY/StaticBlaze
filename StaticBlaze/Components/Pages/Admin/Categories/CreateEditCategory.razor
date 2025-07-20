@@ -1,0 +1,101 @@
+﻿@page "/admin/categories/create"
+@page "/admin/categories/edit/{Id:guid}"
+@using StaticBlaze.Models
+@using StaticBlaze.Services
+@inject IBlogService BlogService
+@inject NavigationManager NavigationManager
+
+<PageTitle>@(Id == null ? "Create" : "Edit") Category - StaticBlaze Admin</PageTitle>
+
+<div class="max-w-4xl mx-auto space-y-6">
+    <div>
+        <h1 class="text-2xl font-bold text-gray-900 dark:text-white">@(Id == null ? "Create" : "Edit") Category</h1>
+        <p class="mt-1 text-sm text-gray-500 dark:text-gray-400">@(Id == null ? "Add a new category" : "Update category details")</p>
+    </div>
+
+    <div class="bg-white dark:bg-gray-800 shadow rounded-lg p-6">
+        <EditForm Model="@category" OnValidSubmit="HandleSubmit" class="space-y-6">
+            <DataAnnotationsValidator />
+
+            <div class="grid grid-cols-1 gap-6">
+                <!-- Title -->
+                <div>
+                    <label for="title" class="block text-sm font-medium text-gray-700 dark:text-gray-300">Title</label>
+                    <div class="mt-1">
+                        <InputText @bind-Value="category.Title" id="title"
+                                  class="shadow-sm focus:ring-indigo-500 focus:border-indigo-500 block w-full sm:text-sm border-gray-300 dark:border-gray-600 rounded-md dark:bg-gray-700 dark:text-white" />
+                        <ValidationMessage For="@(() => category.Title)" class="mt-1 text-sm text-red-600 dark:text-red-400" />
+                    </div>
+                </div>
+
+                <!-- Slug -->
+                <div>
+                    <label for="slug" class="block text-sm font-medium text-gray-700 dark:text-gray-300">Slug</label>
+                    <div class="mt-1">
+                        <InputText @bind-Value="category.Slug" id="slug"
+                                  class="shadow-sm focus:ring-indigo-500 focus:border-indigo-500 block w-full sm:text-sm border-gray-300 dark:border-gray-600 rounded-md dark:bg-gray-700 dark:text-white" />
+                        <ValidationMessage For="@(() => category.Slug)" class="mt-1 text-sm text-red-600 dark:text-red-400" />
+                    </div>
+                    <p class="mt-2 text-sm text-gray-500 dark:text-gray-400">
+                        URL-friendly version of the name. Use lowercase letters, numbers, and hyphens only.
+                    </p>
+                </div>
+            </div>
+
+            <div class="flex justify-end space-x-3 pt-4">
+                <button type="button" @onclick="NavigateBack"
+                        class="inline-flex justify-center py-2 px-4 border border-gray-300 dark:border-gray-600 shadow-sm text-sm font-medium rounded-md text-gray-700 dark:text-gray-300 bg-white dark:bg-gray-800 hover:bg-gray-50 dark:hover:bg-gray-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500">
+                    Cancel
+                </button>
+                <button type="submit"
+                        class="inline-flex justify-center py-2 px-4 border border-transparent shadow-sm text-sm font-medium rounded-md text-white bg-indigo-600 hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500">
+                    @(Id == null ? "Create" : "Update") Category
+                </button>
+            </div>
+        </EditForm>
+    </div>
+</div>
+
+@code {
+    [Parameter]
+    public Guid? Id { get; set; }
+
+    private Category category = new();
+
+    protected override async Task OnInitializedAsync()
+    {
+        if (Id.HasValue)
+        {
+            var existingCategory = await BlogService.GetCategoryByIdAsync(Id.Value);
+            if (existingCategory != null)
+            {
+                category = existingCategory;
+            }
+        }
+    }
+
+    private async Task HandleSubmit()
+    {
+        category.LastUpdated = DateTime.UtcNow;
+
+        bool success;
+        if (Id.HasValue)
+        {
+            success = await BlogService.UpdateCategoryAsync(category);
+        }
+        else
+        {
+            success = await BlogService.CreateCategoryAsync(category);
+        }
+
+        if (success)
+        {
+            NavigateBack();
+        }
+    }
+
+    private void NavigateBack()
+    {
+        NavigationManager.NavigateTo("/admin/categories");
+    }
+}
