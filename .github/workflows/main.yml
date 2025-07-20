@@ -36,7 +36,8 @@ jobs:
       - name: 🏗️ Build Blazor Project
         run: |
           dotnet publish ./StaticBlaze/StaticBlaze.csproj -c Release \
-            -p:BaseHref=/ \
+            -p:BaseHref=/Blog \
+             --pathbase=/Blog \
             -p:BlazorWebAssemblyBasePath=/ \
             -o published \
             --no-restore
