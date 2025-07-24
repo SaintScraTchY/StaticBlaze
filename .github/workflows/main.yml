@@ -56,19 +56,20 @@ jobs:
 
       - name: 📄 Prepare Deployment under /Blog
         run: |
-          # Move everything into a 'Blog' folder
           mkdir -p published/wwwroot/Blog
+          shopt -s dotglob  # this includes hidden files like .nojekyll if needed
           mv published/wwwroot/* published/wwwroot/Blog/
-          # Create a tiny redirect index at the root
+          shopt -u dotglob
+          # Create redirect from root to /Blog
           cat > published/wwwroot/index.html <<EOF
           <!DOCTYPE html>
           <html><head>
             <meta http-equiv="refresh" content="0; url=/Blog/">
           </head><body></body></html>
           EOF
-          # Copy CNAME/.nojekyll in the root of wwwroot
           echo "mehrshad.is-a.dev" > published/wwwroot/CNAME
           touch published/wwwroot/.nojekyll
+
 
       - name: 🔍 Check if GithubPage branch exists
         id: check-branch
