@@ -23,13 +23,13 @@ public class Author
     
     public string? Website { get; set; }
     
-    public List<string> SocialLinks { get; set; } = new();
+    public List<string> SocialLinks { get; set; } = [];
     
-    public List<string> Expertise { get; set; } = new();
+    public List<string> Expertise { get; set; } = [];
     
     public DateTime CreatedAt { get; set; } = DateTime.UtcNow;
     
     public DateTime? LastUpdated { get; set; }
     
-    public List<string> PostIds { get; set; } = new();
+    public ICollection<MetaPost> Posts { get; set; } = [];
 }

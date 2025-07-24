@@ -14,5 +14,5 @@ public class Category
     public string Slug { get; set; } = string.Empty;
     
     public DateTime LastUpdated { get; set; } = DateTime.UtcNow;
-    public List<string> PostIds { get; set; } = new();
+    public List<MetaPost> Posts { get; set; } = [];
 }

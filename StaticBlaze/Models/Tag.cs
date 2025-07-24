@@ -14,5 +14,5 @@ public class Tag
     public string Slug { get; set; } = string.Empty;
     
     public DateTime LastUpdated { get; set; } = DateTime.UtcNow;
-    public List<MetaPost> Posts { get; set; } = new();
+    public List<MetaPost> Posts { get; set; } = [];
 }
