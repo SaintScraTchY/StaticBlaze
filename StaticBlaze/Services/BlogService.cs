@@ -12,8 +12,7 @@ public class BlogService : IBlogService
     private readonly IAnalyticsService _analyticsService;
     private readonly NavigationManager _navigationManager;
     private readonly string _authorsPath;
-    private const string _tagsPath = "Blog/data/tags.json";
-    private const string _categoriesPath = "Blog/data/categories.json";
+    
 
     public BlogService(HttpClient httpClient, NavigationManager navigationManager, IGithubService githubService, IAnalyticsService analyticsService)
     {
@@ -343,10 +342,10 @@ public class BlogService : IBlogService
     {
         try
         {
-            // var json = await _githubService.GetFileContentAsync(_tagsPath);
-            // return string.IsNullOrEmpty(json) 
-            //     ? new List<Tag>() 
-            //     : JsonSerializer.Deserialize<List<Tag>>(json) ?? new List<Tag>();
+            var json = await GetFileContentAsync(StaticBlazeConfig.BlogTags);
+            return string.IsNullOrEmpty(json) 
+                ? []
+                : JsonSerializer.Deserialize<List<Tag>>(json) ?? new List<Tag>();
             return
             [
                 new Tag
@@ -386,7 +385,7 @@ public class BlogService : IBlogService
             var tags = await GetTagsAsync();
             tags.Add(tag);
             var json = JsonSerializer.Serialize(tags, new JsonSerializerOptions { WriteIndented = true });
-            await _githubService.UploadFileAsync(_tagsPath, json);
+            await _githubService.UploadFileAsync(StaticBlazeConfig.BlogTags, json);
             return true;
         }
         catch
@@ -405,7 +404,7 @@ public class BlogService : IBlogService
 
             tags[index] = tag;
             var json = JsonSerializer.Serialize(tags, new JsonSerializerOptions { WriteIndented = true });
-            await _githubService.UploadFileAsync(_tagsPath, json);
+            await _githubService.UploadFileAsync(StaticBlazeConfig.BlogTags, json);
             return true;
         }
         catch
@@ -424,7 +423,7 @@ public class BlogService : IBlogService
 
             tags.Remove(tag);
             var json = JsonSerializer.Serialize(tags, new JsonSerializerOptions { WriteIndented = true });
-            await _githubService.UploadFileAsync(_tagsPath, json);
+            await _githubService.UploadFileAsync(StaticBlazeConfig.BlogTags, json);
             return true;
         }
         catch
@@ -437,7 +436,7 @@ public class BlogService : IBlogService
     {
         try
         {
-            var json = await GetFileContentAsync(_categoriesPath);
+            var json = await GetFileContentAsync(StaticBlazeConfig.BlogCategories);
             return string.IsNullOrEmpty(json) 
                 ? new List<Category>() 
                 : JsonSerializer.Deserialize<List<Category>>(json) ?? new List<Category>();
@@ -468,7 +467,7 @@ public class BlogService : IBlogService
             var categories = await GetCategoriesAsync();
             categories.Add(category);
             var json = JsonSerializer.Serialize(categories, new JsonSerializerOptions { WriteIndented = true });
-            await _githubService.UploadFileAsync(_categoriesPath, json);
+            await _githubService.UploadFileAsync(StaticBlazeConfig.BlogCategories, json);
             return true;
         }
         catch
@@ -487,7 +486,7 @@ public class BlogService : IBlogService
 
             categories[index] = category;
             var json = JsonSerializer.Serialize(categories, new JsonSerializerOptions { WriteIndented = true });
-            await _githubService.UploadFileAsync(_categoriesPath, json);
+            await _githubService.UploadFileAsync(StaticBlazeConfig.BlogCategories, json);
             return true;
         }
         catch
@@ -506,7 +505,7 @@ public class BlogService : IBlogService
 
             categories.Remove(category);
             var json = JsonSerializer.Serialize(categories, new JsonSerializerOptions { WriteIndented = true });
-            await _githubService.UploadFileAsync(_categoriesPath, json);
+            await _githubService.UploadFileAsync(StaticBlazeConfig.BlogCategories, json);
             return true;
         }
         catch
