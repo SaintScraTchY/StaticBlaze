@@ -27,4 +27,5 @@ public interface IBlogService
     Task<bool> UpdateCategoryAsync(Category category);
     Task<bool> CreateCategoryAsync(Category category);
     Task<Category> GetCategoryByIdAsync(Guid id);
+    Task<string?> GetFileContentAsync(string filePath);
 }

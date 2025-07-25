@@ -437,10 +437,10 @@ public class BlogService : IBlogService
     {
         try
         {
-            // var json = await _githubService.GetFileContentAsync(_categoriesPath);
-            // return string.IsNullOrEmpty(json) 
-            //     ? new List<Category>() 
-            //     : JsonSerializer.Deserialize<List<Category>>(json) ?? new List<Category>();
+            var json = await GetFileContentAsync(_categoriesPath);
+            return string.IsNullOrEmpty(json) 
+                ? new List<Category>() 
+                : JsonSerializer.Deserialize<List<Category>>(json) ?? new List<Category>();
             return [];
         }
         catch
@@ -453,6 +453,12 @@ public class BlogService : IBlogService
     {
         var categories = await GetCategoriesAsync();
         return categories.FirstOrDefault(c => c.Id == id);
+    }
+
+    public async Task<string?> GetFileContentAsync(string filePath)
+    {
+        var response = await _httpClient.GetStringAsync($"{_navigationManager.BaseUri}/{filePath}");
+        return response;
     }
 
     public async Task<bool> CreateCategoryAsync(Category category)
