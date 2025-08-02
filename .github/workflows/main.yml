@@ -36,8 +36,6 @@ jobs:
       - name: 🏗️ Build Blazor Project
         run: |
           dotnet publish ./StaticBlaze/StaticBlaze.csproj -c Release \
-            -p:BaseHref=/Blog/ \
-            -p:BlazorWebAssemblyBasePath=/Blog/ \
             -o published \
             --no-restore
 
@@ -53,23 +51,6 @@ jobs:
           ls -la published
           ls -la published/wwwroot
           [ -d "published/wwwroot" ] || exit 1
-
-      - name: 📄 Prepare Deployment under /Blog
-        run: |
-          mkdir -p published/wwwroot/Blog
-          shopt -s dotglob  # this includes hidden files like .nojekyll if needed
-          mv published/wwwroot/* published/wwwroot/Blog/
-          shopt -u dotglob
-          # Create redirect from root to /Blog
-          cat > published/wwwroot/index.html <<EOF
-          <!DOCTYPE html>
-          <html><head>
-            <meta http-equiv="refresh" content="0; url=/Blog/">
-          </head><body></body></html>
-          EOF
-          echo "mehrshad.is-a.dev" > published/wwwroot/CNAME
-          touch published/wwwroot/.nojekyll
-
 
       - name: 🔍 Check if GithubPage branch exists
         id: check-branch
