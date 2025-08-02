@@ -86,3 +86,4 @@ jobs:
         with:
           branch: GithubPage
           folder: published/wwwroot
+          token: ${{ secrets.GITHUB_TOKEN }}
