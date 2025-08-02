@@ -10,8 +10,6 @@ jobs:
     steps:
       - name: 🛠️ Checkout Repository
         uses: actions/checkout@v4
-        with:
-          token: ${{ secrets.GHPAT || github.token }}
 
       - name: ⚙️ Setup .NET 9 SDK
         uses: actions/setup-dotnet@v4
@@ -87,6 +85,4 @@ jobs:
         uses: JamesIves/github-pages-deploy-action@v4
         with:
           branch: GithubPage
-          token: ${{ secrets.GHPAT }}
-          github_token: ${{ secrets.GHPAT }}
           folder: published/wwwroot
