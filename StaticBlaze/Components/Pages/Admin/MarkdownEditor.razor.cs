@@ -10,7 +10,8 @@ namespace StaticBlaze.Components.Pages.Admin;
 public partial class MarkdownEditor : ComponentBase
 {
     private ElementReference EditorElement;
-    private IJSObjectReference _mdModule;
+    // private IJSObjectReference _mdModule;
+    private IJSObjectReference _module;
     private IJSObjectReference _editor;
     private bool _isInitialized;
     private readonly IGithubService _githubService;
@@ -27,8 +28,8 @@ public partial class MarkdownEditor : ComponentBase
     {
         if (first)
         {
-            _mdModule = await JsRuntime.InvokeAsync<IJSObjectReference>("import", "./js/MarkdownEditor.js");
-            _editor = await _mdModule.InvokeAsync<IJSObjectReference>("initEditor", EditorElement, DotNetObjectReference.Create(this), Content);
+            _module = await JsRuntime.InvokeAsync<IJSObjectReference>("import", "./js/MarkdownEditor.js");
+            _editor = await _module.InvokeAsync<IJSObjectReference>("initEditor", EditorElement, DotNetObjectReference.Create(this), Content);
             _isInitialized = true;
             StateHasChanged();
         }
@@ -64,7 +65,15 @@ public partial class MarkdownEditor : ComponentBase
 
     public async ValueTask DisposeAsync()
     {
-        if (_editor != null) await _editor.InvokeVoidAsync("destroy");
-        if (_mdModule != null) await _mdModule.DisposeAsync();
+        if (_editor != null)
+        {
+             await _editor.InvokeVoidAsync("destroy");
+             await _editor.DisposeAsync();
+        }
+
+        if (_module != null)
+        {
+            await _module.DisposeAsync();
+        }
     }
 }
