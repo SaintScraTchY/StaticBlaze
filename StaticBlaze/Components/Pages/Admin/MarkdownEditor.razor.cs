@@ -1,6 +1,5 @@
 ﻿using System.Security.Cryptography;
 using HeyRed.Mime;
-using Microsoft.AspNetCore.Components;
 using Microsoft.JSInterop;
 using StaticBlaze.Constants;
 using StaticBlaze.Services;

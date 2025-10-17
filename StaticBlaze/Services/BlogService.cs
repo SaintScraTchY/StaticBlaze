@@ -1,4 +1,5 @@
-﻿using StaticBlaze.Constants;
+﻿using System.Text;
+using StaticBlaze.Constants;
 using StaticBlaze.Models;
 using StaticBlaze.Utilities.MarkdownParser;
 using System.Text.Json;
@@ -11,7 +12,6 @@ public class BlogService : IBlogService
     private readonly IGithubService _githubService;
     private readonly IAnalyticsService _analyticsService;
     private readonly NavigationManager _navigationManager;
-    private readonly string _authorsPath;
     
 
     public BlogService(HttpClient httpClient, NavigationManager navigationManager, IGithubService githubService, IAnalyticsService analyticsService)
@@ -20,13 +20,12 @@ public class BlogService : IBlogService
         _navigationManager = navigationManager;
         _githubService = githubService;
         _analyticsService = analyticsService;
-        _authorsPath = Path.Combine(StaticBlazeConfig.BlogDB, "authors.json");
     }
 
     public async Task<BlogPost?> GetPostAsync(string slug)
     {
-        var docResponse = _httpClient.GetStringAsync($"{_navigationManager.BaseUri}{StaticBlazeConfig.BlogDocs}/{slug}.md");
-        var postResponse = _httpClient.GetStringAsync($"{_navigationManager.BaseUri}{StaticBlazeConfig.BlogPosts}/{slug}.html");
+        var docResponse = _httpClient.GetStringAsync($"{_navigationManager.BaseUri}Data/{StaticBlazeConfig.BlogDocs}/{slug}.md");
+        var postResponse = _httpClient.GetStringAsync($"{_navigationManager.BaseUri}Data/{StaticBlazeConfig.BlogPosts}/{slug}.html");
         await Task.WhenAll(docResponse, postResponse);
 
         var postSummary = docResponse.Result;
@@ -290,7 +289,7 @@ public class BlogService : IBlogService
             var authors = await GetAllAuthorsAsync();
             authors.Add(author);
             var json = JsonSerializer.Serialize(authors, new JsonSerializerOptions { WriteIndented = true });
-            await _githubService.UploadFileAsync(_authorsPath, json);
+            await _githubService.UploadFileAsync(Encoding.UTF8.GetBytes(json),StaticBlazeConfig.BlogAuthors);
             return true;
         }
         catch
@@ -311,7 +310,7 @@ public class BlogService : IBlogService
             author.LastUpdated = DateTime.UtcNow;
             
             var json = JsonSerializer.Serialize(authors, new JsonSerializerOptions { WriteIndented = true });
-            await _githubService.UploadFileAsync(_authorsPath, json);
+            await _githubService.UploadFileAsync(Encoding.UTF8.GetBytes(json),StaticBlazeConfig.BlogAuthors);
             return true;
         }
         catch
@@ -329,7 +328,7 @@ public class BlogService : IBlogService
             
             authors.Remove(authorToRemove);
             var json = JsonSerializer.Serialize(authors, new JsonSerializerOptions { WriteIndented = true });
-            await _githubService.UploadFileAsync(_authorsPath, json);
+            await _githubService.UploadFileAsync(Encoding.UTF8.GetBytes(json),StaticBlazeConfig.BlogAuthors);
             return true;
         }
         catch
@@ -345,7 +344,7 @@ public class BlogService : IBlogService
             var json = await GetFileContentAsync(StaticBlazeConfig.BlogTags);
             return string.IsNullOrEmpty(json) 
                 ? []
-                : JsonSerializer.Deserialize<List<Tag>>(json) ?? new List<Tag>();
+                : JsonSerializer.Deserialize<List<Tag>>(json) ?? [];
             return
             [
                 new Tag
@@ -366,9 +365,9 @@ public class BlogService : IBlogService
                 }
             ];
         }
-        catch
+        catch (Exception ex)
         {
-            return new List<Tag>();
+            return [];
         }
     }
 
@@ -385,10 +384,10 @@ public class BlogService : IBlogService
             var tags = await GetTagsAsync();
             tags.Add(tag);
             var json = JsonSerializer.Serialize(tags, new JsonSerializerOptions { WriteIndented = true });
-            await _githubService.UploadFileAsync(StaticBlazeConfig.BlogTags, json);
+            await _githubService.UploadFileAsync(Encoding.UTF8.GetBytes(json),StaticBlazeConfig.BlogTags);
             return true;
         }
-        catch
+        catch (Exception ex)
         {
             return false;
         }
@@ -404,7 +403,7 @@ public class BlogService : IBlogService
 
             tags[index] = tag;
             var json = JsonSerializer.Serialize(tags, new JsonSerializerOptions { WriteIndented = true });
-            await _githubService.UploadFileAsync(StaticBlazeConfig.BlogTags, json);
+            await _githubService.UploadFileAsync(Encoding.UTF8.GetBytes(json),StaticBlazeConfig.BlogTags);
             return true;
         }
         catch
@@ -423,7 +422,7 @@ public class BlogService : IBlogService
 
             tags.Remove(tag);
             var json = JsonSerializer.Serialize(tags, new JsonSerializerOptions { WriteIndented = true });
-            await _githubService.UploadFileAsync(StaticBlazeConfig.BlogTags, json);
+            await _githubService.UploadFileAsync(Encoding.UTF8.GetBytes(json),StaticBlazeConfig.BlogTags);
             return true;
         }
         catch
@@ -438,8 +437,8 @@ public class BlogService : IBlogService
         {
             var json = await GetFileContentAsync(StaticBlazeConfig.BlogCategories);
             return string.IsNullOrEmpty(json) 
-                ? new List<Category>() 
-                : JsonSerializer.Deserialize<List<Category>>(json) ?? new List<Category>();
+                ? []
+                : JsonSerializer.Deserialize<List<Category>>(json) ?? [];
             return [];
         }
         catch
@@ -456,7 +455,7 @@ public class BlogService : IBlogService
 
     public async Task<string?> GetFileContentAsync(string filePath)
     {
-        var response = await _httpClient.GetStringAsync($"{_navigationManager.BaseUri}/{filePath}");
+        var response = await _httpClient.GetStringAsync($"{_navigationManager.BaseUri}Data/{filePath}");
         return response;
     }
 
@@ -467,7 +466,7 @@ public class BlogService : IBlogService
             var categories = await GetCategoriesAsync();
             categories.Add(category);
             var json = JsonSerializer.Serialize(categories, new JsonSerializerOptions { WriteIndented = true });
-            await _githubService.UploadFileAsync(StaticBlazeConfig.BlogCategories, json);
+            await _githubService.UploadFileAsync(Encoding.UTF8.GetBytes(json),StaticBlazeConfig.BlogCategories);
             return true;
         }
         catch
@@ -486,7 +485,7 @@ public class BlogService : IBlogService
 
             categories[index] = category;
             var json = JsonSerializer.Serialize(categories, new JsonSerializerOptions { WriteIndented = true });
-            await _githubService.UploadFileAsync(StaticBlazeConfig.BlogCategories, json);
+            await _githubService.UploadFileAsync(Encoding.UTF8.GetBytes(json),StaticBlazeConfig.BlogCategories);
             return true;
         }
         catch
@@ -505,7 +504,7 @@ public class BlogService : IBlogService
 
             categories.Remove(category);
             var json = JsonSerializer.Serialize(categories, new JsonSerializerOptions { WriteIndented = true });
-            await _githubService.UploadFileAsync(StaticBlazeConfig.BlogCategories, json);
+            await _githubService.UploadFileAsync(Encoding.UTF8.GetBytes(json),StaticBlazeConfig.BlogCategories);
             return true;
         }
         catch

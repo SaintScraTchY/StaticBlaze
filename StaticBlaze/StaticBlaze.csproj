@@ -30,7 +30,7 @@
     </ItemGroup>
 
     <ItemGroup>
-        <Content Include="BlogFiles\**\*.*" CopyToOutputDirectory="PreserveNewest" Link="wwwroot\Blog\%(RecursiveDir)%(Filename)%(Extension)" />
+        <Content Include="Data\**\*.*" CopyToOutputDirectory="PreserveNewest" Link="wwwroot\Data\%(RecursiveDir)%(Filename)%(Extension)" />
     </ItemGroup>
 
     <ItemGroup>
@@ -43,7 +43,7 @@
     </ItemGroup>
 
     <ItemGroup>
-      <Folder Update="Blog" />
+      <Folder Update="Data" />
     </ItemGroup>
 </Project>
 

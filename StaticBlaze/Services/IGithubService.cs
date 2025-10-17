@@ -12,5 +12,6 @@ public interface IGithubService
     Task<string> UploadFileAsync(IBrowserFile file);
     Task<string> UploadFileAsync(Stream stream, string fileName);
     Task<string> UploadFileAsync(string base64Content, string fileName);
+    Task<string> UploadFileAsync(byte[] content, string fileName);
     Task<List<string>> UploadFilesAsync(IEnumerable<IBrowserFile> files);
 }

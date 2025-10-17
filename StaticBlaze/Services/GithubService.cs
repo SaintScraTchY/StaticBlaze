@@ -100,6 +100,11 @@ public class GithubService : IGithubService
         var bytes = Convert.FromBase64String(base64Content);
         return await UploadToGitHubAsync(bytes, fileName);
     }
+    
+    public async Task<string> UploadFileAsync(byte[] content, string fileName)
+    {
+        return await UploadToGitHubAsync(content, fileName);
+    }
 
     public async Task<List<string>> UploadFilesAsync(IEnumerable<IBrowserFile> files)
     {
@@ -120,7 +125,8 @@ public class GithubService : IGithubService
         var ghPAT = await _localStorage.GetItemAsStringAsync("GitHubToken");
         if (string.IsNullOrEmpty(ghPAT)) return string.Empty;
 
-        var path = $"{StaticBlazeConfig.ProjectName}{StaticBlazeConfig.BlogAssets}/{fileName}";
+        //var path = $"{StaticBlazeConfig.ProjectName}{StaticBlazeConfig.BlogAssets}/{fileName}";
+        var path = $"{StaticBlazeConfig.ProjectName}Data/{fileName}";
         var githubApiUrl = $"https://api.github.com/repos/{GithubConfig.Owner}/{GithubConfig.Repo}/contents/{path}";
 
         var content = new
@@ -161,7 +167,7 @@ public class GithubService : IGithubService
         _httpClient.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("token", ghPAT);
         _httpClient.DefaultRequestHeaders.UserAgent.ParseAdd("StaticBlaze");
 
-        var githubApiUrl = $"https://api.github.com/repos/{GithubConfig.Owner}/{GithubConfig.Repo}/contents/{StaticBlazeConfig.ProjectName}{StaticBlazeConfig.BlogDocs}?ref={GithubConfig.Branch}";
+        var githubApiUrl = $"https://api.github.com/repos/{GithubConfig.Owner}/{GithubConfig.Repo}/contents/{StaticBlazeConfig.ProjectName}Data/{StaticBlazeConfig.BlogDocs}?ref={GithubConfig.Branch}";
         Console.WriteLine(githubApiUrl);
         var response = await _httpClient.GetAsync(githubApiUrl);
         var files = await response.Content.ReadFromJsonAsync<List<GitHubContentFileName>>();
