@@ -23,7 +23,8 @@
                     <label for="title" class="block text-sm font-medium text-gray-700 dark:text-gray-300">Title</label>
                     <div class="mt-1">
                         <InputText @bind-Value="category.Title" id="title"
-                                  class="shadow-sm focus:ring-indigo-500 focus:border-indigo-500 block w-full sm:text-sm border-gray-300 dark:border-gray-600 rounded-md dark:bg-gray-700 dark:text-white" />
+                                   class="shadow-sm focus:ring-indigo-500 focus:border-indigo-500 block w-full sm:text-shadow-md md:text lg:text-2xl 
+border-gray-300 dark:border-gray-600 rounded-md dark:bg-gray-700 dark:text-white" />
                         <ValidationMessage For="@(() => category.Title)" class="mt-1 text-sm text-red-600 dark:text-red-400" />
                     </div>
                 </div>
@@ -33,7 +34,8 @@
                     <label for="slug" class="block text-sm font-medium text-gray-700 dark:text-gray-300">Slug</label>
                     <div class="mt-1">
                         <InputText @bind-Value="category.Slug" id="slug"
-                                  class="shadow-sm focus:ring-indigo-500 focus:border-indigo-500 block w-full sm:text-sm border-gray-300 dark:border-gray-600 rounded-md dark:bg-gray-700 dark:text-white" />
+                                   class="shadow-sm focus:ring-indigo-500 focus:border-indigo-500 block w-full sm:text-shadow-md md:text lg:text-2xl 
+border-gray-300 dark:border-gray-600 rounded-md dark:bg-gray-700 dark:text-white" />
                         <ValidationMessage For="@(() => category.Slug)" class="mt-1 text-sm text-red-600 dark:text-red-400" />
                     </div>
                     <p class="mt-2 text-sm text-gray-500 dark:text-gray-400">

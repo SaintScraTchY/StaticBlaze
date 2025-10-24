@@ -455,7 +455,7 @@ public class BlogService : IBlogService
 
     public async Task<string?> GetFileContentAsync(string filePath)
     {
-        var response = await _httpClient.GetStringAsync($"{_navigationManager.BaseUri}Data/{filePath}");
+        var response = await _httpClient.GetStringAsync($"{_navigationManager.BaseUri}Data/{filePath}.gz");
         return response;
     }
 

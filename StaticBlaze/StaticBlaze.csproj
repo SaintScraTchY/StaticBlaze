@@ -6,7 +6,7 @@
         <ImplicitUsings>enable</ImplicitUsings>
         <TailwindCssInput>wwwroot/css/dist.css</TailwindCssInput>
         <TailwindCssOutput>wwwroot/css/dist.out.css</TailwindCssOutput>
-            <BlazorEnableCompression>true</BlazorEnableCompression>
+        <BlazorEnableCompression>true</BlazorEnableCompression>
     </PropertyGroup>
 
     <Target Name="TailwindBuild" BeforeTargets="PreBuildEvent">
@@ -30,7 +30,9 @@
     </ItemGroup>
 
     <ItemGroup>
-        <Content Include="Data\**\*.*" CopyToOutputDirectory="PreserveNewest" Link="wwwroot\Data\%(RecursiveDir)%(Filename)%(Extension)" />
+        <Content Remove="Data\**\*.*" />
+        <Content Include="Data\**\*.*" CopyToOutputDirectory="PreserveNewest"
+                 Link="wwwroot\Data\%(RecursiveDir)%(Filename)%(Extension)" />
     </ItemGroup>
 
     <ItemGroup>
